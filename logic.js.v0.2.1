@@ -25,7 +25,20 @@ async function stu_Select_course(selectCourse) {   // eslint-disable-line no-unu
     var NS = 'org.example.empty';
     var student=selectCourse.student;
     var course=selectCourse.course_list;
-    student.course_list.push(course.course_id);
+    var unit_course = course.unit_course;
+    var unit_course_id = selectCourse.course_id;
+    // 大課程人數+1  
+    course.current_student++;
+    // 小課程人數+1 &  加入學生id
+    for(var i = 0 ; i < unit_course.length ; i++){
+        if( unit_course[i].course_id ===  unit_course_id){
+            unit_course[i].current_student++;
+            unit_course[i].students_id.push(student.student_id);
+        }
+    }
+    //
+    // 學生那邊放入課程id
+    student.course_list.push(unit_course.course_id);
     const participant_stu = await getParticipantRegistry('org.example.empty.Student');
     await participant_stu.update(student);
     const asset_course = await getAssetRegistry('org.example.empty.Course');
@@ -56,8 +69,43 @@ async function cc_Add_course(addCourse){
     new_course.introduce = addCourse.introduce;
     new_course.max_student = addCourse.max_student;
     new_course.score = 0;
+    new_course.current_student=0;
     new_course.unit_course = [];
     new_course.current_student = addCourse.current_student;
+    new_course.student=[];
     const course_registry = await getAssetRegistry(new_course.getFullyQualifiedType());
     await course_registry.add(new_course);
+}
+
+/**
+ * @param {org.example.empty.stu_delete_unit} stu_delete_unit
+ * @transaction
+ */
+async function stu_delete_unit(stu_delete_unit){
+    var delete_unit = stu_delete_unit.unit_id;
+    var student_id = stu_delete_unit.student_id;
+    var student = stu_delete_unit.student;
+    var course_list = stu_delete_unit.course_list;
+    for(var i=0;i<delete_unit.length;i++){
+        var item = delete_unit[i];
+        //刪除學生中的unit id
+        for(var j=0;j<student.course_list.length;j++){
+            if(item === student_list[j]){
+                delete student_list[j];
+            }
+        }
+        //
+        //刪除課程中的student id
+        for(var j=0;j<course_list.unit_course.length;j++){
+            var unit_id = course_list.unit_course[j].course_id;
+            if(unit_id === item){
+                for(var k=0;k<course_list.unit_course[j].student.length;k++){
+                    if(student_id === course_list.unit_course[j].student[k]){
+                        delete course_list.unit_course[j].student[k];
+                    }
+                }
+            }
+        }
+        //
+    }
 }
