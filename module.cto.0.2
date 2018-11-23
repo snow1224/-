@@ -1,0 +1,147 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * A business network for shipping perishable goods
+ * The cargo is temperature controlled and contracts
+ * can be negociated based on the temperature
+ * readings received for the cargo
+ */
+
+namespace org.example.empty
+ 
+/**
+ * The type of perishable product being shipped
+ */
+enum Attend_status {
+  o ATTEND
+  o LATE
+  o ABSENCE
+}
+
+/**
+ * The status of a Course
+ */
+enum Course_status {
+  o PASS
+  o FAIL
+}
+
+/**
+ * A Course being tracked as an asset on the ledger
+ */
+ concept unit{
+  o String course_id
+  o String course_name
+  o Course_status status
+  o Long time_count
+  o String course_date
+  o String course_time
+  o Integer credit
+  o String[] teachers
+  o String[] accept
+  o String introduce
+  o Integer max_student
+  o Integer current_student
+  o Integer score   optional
+ }
+asset Course identified by course_id {
+  o String course_id
+  o String course_name
+  o Course_status status
+  o Long time_count
+  o String course_date
+  o String course_time
+  o Integer credit
+  o String[] teachers
+  o String[] accept
+  o String introduce
+  o Integer max_student
+  o Integer current_student
+  o Integer score   optional
+  o unit[] unit_course  optional
+  o Integer avg_score  optional
+  o String[] student  optional
+}
+
+
+
+
+/**
+ * A Student is a type of participant in the network
+ */
+participant Student identified by student_id {
+  o String student_id
+  o String student_name
+  o String student_class
+  o String[] course_list
+}
+
+concept Student_set{
+  o String student_id
+  o Integer score
+  o Attend_status attend_status
+}
+/**
+ * A Shipper is a type of participant in the network
+ */
+participant Teacher identified by teacher_id {
+  o String teacher_id
+  o String teacher_email
+  o String teacher_name
+  o unit[] teach
+  --> Student[] student_list
+  o Student_set[] student_status
+}
+/**
+  CourseCenter */
+participant Course_center identified by cc_id{
+  o String cc_id
+  o String cc_name   // 行政人員名字
+  --> Teacher teacher
+}
+
+/**
+ * JUST FOR INITIALIZING A DEMO
+ */
+transaction tr_Input_score {
+  --> Teacher teacher   //  只有該課老師才可以打分數，似乎要寫ACL
+  --> Student student
+}
+
+transaction tr_Caculcate_attend{
+  --> Teacher teacher
+  --> Student studnet
+}
+
+transaction stu_Select_course{
+  --> Student student
+  --> Course course_list
+}
+
+transaction cc_Add_course{
+  o String course_id
+  o String course_name
+  o Course_status status
+  o Long time_count
+  o String course_date
+  o String course_time
+  o Integer credit
+  o String introduce
+  o Integer max_student
+  o Integer current_student
+  o String[] teachers
+  o String[] accept
+  --> Course_center course_center
+}
