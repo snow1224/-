@@ -50,7 +50,7 @@ enum Course_status {
   o String course_time
   o Integer credit
   o String[] teachers
-  o String[] accept
+  o String[] accepts
   o String[] students_id
   o String introduce
   o Integer max_student
@@ -66,14 +66,14 @@ asset Course identified by course_id {
   o String course_time
   o Integer credit
   o String[] teachers
-  o String[] accept
+  o String[] accepts
   o String introduce
   o Integer max_student
   o Integer current_student
   o Integer score   optional
-  o unit[] unit_course  optional
+  o Course[] unit_course  optional
   o Integer avg_score  optional
-//  o String[] student  optional  覺得不重要，也許以後可以寫
+  o String[] student  
 }
 
 
@@ -125,9 +125,9 @@ transaction tr_Caculcate_attend{
   --> Teacher teacher
   --> Student studnet
 }
-// new transaction
+
 transaction stu_Select_course{
-  o String course_id   // 要寫課程id，不然不知道是誰
+  o String course_id
   --> Student student
   --> Course course_list
 }
@@ -151,6 +151,23 @@ transaction cc_Add_course{
   o Integer max_student
   o Integer current_student
   o String[] teachers
-  o String[] accept
+  o String[] accepts
   --> Course_center course_center
+}
+
+transaction cc_Add_unit_course{
+  o String course_id
+  o String course_name
+  o Course_status status
+  o Long time_count
+  o String course_date
+  o String course_time
+  o Integer credit
+  o String introduce
+  o Integer max_student
+  o Integer current_student
+  o String[] teachers
+  o String[] accepts
+  --> Course_center course_center
+  --> Course course
 }
