@@ -64,7 +64,7 @@ async function cc_Add_course(addCourse){
     new_course.course_time = addCourse.course_time;
     new_course.status = addCourse.status;
     new_course.teachers = addCourse.teachers;
-    new_course.accept = addCourse.accept;
+    new_course.accepts = addCourse.accepts;
     new_course.credit = addCourse.credit;
     new_course.introduce = addCourse.introduce;
     new_course.max_student = addCourse.max_student;
@@ -108,4 +108,35 @@ async function stu_delete_unit(stu_delete_unit){
         }
         //
     }
+}
+
+/**
+ * @param {org.example.empty.cc_Add_unit_course} cc_Add_unit_course
+ * @transaction
+ */
+async function cc_Add_unit_course(add_unit_course){
+    var course = add_unit_course.course;
+    var NS = 'org.example.empty';
+  	var factory = getFactory();
+    var course_id = add_unit_course.course_id;
+    const new_course = factory.newResource(NS,'Course',course_id);
+    new_course.course_id = add_unit_course.course_id;
+    new_course.course_name = add_unit_course.course_name;
+    new_course.time_count = add_unit_course.time_count;
+    new_course.course_date = add_unit_course.course_date;
+    new_course.course_time = add_unit_course.course_time;
+    new_course.status = add_unit_course.status;
+    new_course.teachers = add_unit_course.teachers;
+    new_course.accepts = add_unit_course.accepts;
+    new_course.credit = add_unit_course.credit;
+    new_course.introduce = add_unit_course.introduce;
+    new_course.max_student = add_unit_course.max_student;
+    new_course.score = 0;
+    new_course.current_student=0;
+    new_course.unit_course = [];
+    new_course.current_student = add_unit_course.current_student;
+    new_course.student=[];
+    course.unit_course.push(new_course);
+    const asset_course = await getAssetRegistry('org.example.empty.Course');
+    await asset_course.update(course);
 }
