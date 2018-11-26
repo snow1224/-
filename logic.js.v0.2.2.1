@@ -31,18 +31,18 @@ async function stu_Select_course(selectCourse) {   // eslint-disable-line no-unu
     course.current_student++;
     // 小課程人數+1 &  加入學生id
     for(var i = 0 ; i < unit_course.length ; i++){
-        if( unit_course[i].course_id ===  unit_course_id){
-            unit_course[i].current_student++;
-            unit_course[i].students_id.push(student.student_id);
+       if( course.unit_course[i].course_id ===  unit_course_id){
+            course.unit_course[i].current_student++;
+ //           course.unit_course[i].students.push(student);
         }
     }
     //
     // 學生那邊放入課程id
-    student.course_list.push(unit_course.course_id);
+    student.course_list.push(unit_course_id);
     const participant_stu = await getParticipantRegistry('org.example.empty.Student');
     await participant_stu.update(student);
     const asset_course = await getAssetRegistry('org.example.empty.Course');
-    course.student_id.push(student.student_id);
+    course.student.push(student);
     await asset_course.update(course);
 }
  /**
@@ -90,8 +90,8 @@ async function stu_delete_unit(stu_delete_unit){
         var item = delete_unit[i];
         //刪除學生中的unit id
         for(var j=0;j<student.course_list.length;j++){
-            if(item === student_list[j]){
-                delete student_list[j];
+            if(item === student.course_list[j]){
+                delete student.course_list[j];
             }
         }
         //
@@ -100,7 +100,7 @@ async function stu_delete_unit(stu_delete_unit){
             var unit_id = course_list.unit_course[j].course_id;
             if(unit_id === item){
                 for(var k=0;k<course_list.unit_course[j].student.length;k++){
-                    if(student_id === course_list.unit_course[j].student[k]){
+                    if(student_id === course_list.unit_course[j].student[k].student_id){
                         delete course_list.unit_course[j].student[k];
                     }
                 }
@@ -108,6 +108,10 @@ async function stu_delete_unit(stu_delete_unit){
         }
         //
     }
+    const asset_course = await getAssetRegistry('org.example.empty.Course');
+    await asset_course.update(course_list);
+ //   const participant_stu = await getParticipantRegistry('org.example.empty.Student');
+//    await participant_stu.update(student);
 }
 
 /**
@@ -137,6 +141,29 @@ async function cc_Add_unit_course(add_unit_course){
     new_course.current_student = add_unit_course.current_student;
     new_course.student=[];
     course.unit_course.push(new_course);
+    const asset_course = await getAssetRegistry('org.example.empty.Course');
+    await asset_course.update(course);
+}
+/**
+ * @param {org.example.empty.tr_Modify_score} tr_Modify_score
+ * @transaction
+ */
+async function tr_Modify_score(modify_score){
+    var teacher = input_score.teacher;
+    var student = input_score.student;
+    var course = input_score.course;
+
+    // var student_id = input_score.student.getIdentifier();
+    for(var i = 0 ; i < teacher.teach.length ; i++){
+        if(modify_score.unit_course_id === teacher.teach[i].course_id){ //老師要修改的unit，檢查是否老師有教這個課程
+            for(var j = 0 ; j < course.student.length ; j++){
+                if(modify_score.student_id === course.student[j].student_id){ //看
+                    course.student[j].unit_score = modify_score.score;
+                }
+            }        
+        
+        }
+    }
     const asset_course = await getAssetRegistry('org.example.empty.Course');
     await asset_course.update(course);
 }
