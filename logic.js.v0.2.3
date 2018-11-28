@@ -76,25 +76,29 @@ async function cc_Add_course(addCourse){
     const course_registry = await getAssetRegistry(new_course.getFullyQualifiedType());
     await course_registry.add(new_course);
 }
-
+/////////////problem 刪除不掉，delete,splice刪不掉，但pop()可以//////////////
 /**
  * @param {org.example.empty.stu_delete_unit} stu_delete_unit
  * @transaction
  */
 async function stu_delete_unit(stu_delete_unit){
-    var delete_unit = stu_delete_unit.unit_id;
-    var student_id = stu_delete_unit.student_id;
-    var student = stu_delete_unit.student;
-    var course_list = stu_delete_unit.course_list;
+    var delete_unit = stu_delete_unit.unit_id;  // array
+    var student_id = stu_delete_unit.student_id;  // string 
+    var student = stu_delete_unit.student;   // --> student
+    var course_list = stu_delete_unit.course_list;  // --> course
+    const participant_stu = await getParticipantRegistry('org.example.empty.Student');
     for(var i=0;i<delete_unit.length;i++){
         var item = delete_unit[i];
         //刪除學生中的unit id
         for(var j=0;j<student.course_list.length;j++){
             if(item === student.course_list[j]){
-                delete student.course_list[j];
+                student.course_list.remove(j);
+                alert(student.course_list);
+              	break;
             }
         }
-        //
+       
+   	   await participant_stu.update(student);
         //刪除課程中的student id
         for(var j=0;j<course_list.unit_course.length;j++){
             var unit_id = course_list.unit_course[j].course_id;
@@ -110,10 +114,8 @@ async function stu_delete_unit(stu_delete_unit){
     }
     const asset_course = await getAssetRegistry('org.example.empty.Course');
     await asset_course.update(course_list);
- //   const participant_stu = await getParticipantRegistry('org.example.empty.Student');
-//    await participant_stu.update(student);
 }
-
+/////////////problem 刪除不掉，delete,splice刪不掉，但pop()可以//////////////
 /**
  * @param {org.example.empty.cc_Add_unit_course} cc_Add_unit_course
  * @transaction
@@ -149,16 +151,17 @@ async function cc_Add_unit_course(add_unit_course){
  * @transaction
  */
 async function tr_Modify_score(modify_score){
-    var teacher = input_score.teacher;
-    var student = input_score.student;
-    var course = input_score.course;
+    var teacher = modify_score.teacher;
+    var student = modify_score.student;
+    var course = modify_score.course;
 
     // var student_id = input_score.student.getIdentifier();
     for(var i = 0 ; i < teacher.teach.length ; i++){
-        if(modify_score.unit_course_id === teacher.teach[i].course_id){ //老師要修改的unit，檢查是否老師有教這個課程
+        if(modify_score.unit_course_id === teacher.teach[i]){ //老師要修改的unit，檢查是否老師有教這個課程
             for(var j = 0 ; j < course.student.length ; j++){
                 if(modify_score.student_id === course.student[j].student_id){ //看
                     course.student[j].unit_score = modify_score.score;
+                  	student.unit_score = modify_score.score;
                 }
             }        
         
@@ -166,4 +169,6 @@ async function tr_Modify_score(modify_score){
     }
     const asset_course = await getAssetRegistry('org.example.empty.Course');
     await asset_course.update(course);
+ 	const participant_stu = await getParticipantRegistry('org.example.empty.Student');
+    await participant_stu.update(student);
 }
