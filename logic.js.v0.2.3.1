@@ -172,3 +172,26 @@ async function tr_Modify_score(modify_score){
  	const participant_stu = await getParticipantRegistry('org.example.empty.Student');
     await participant_stu.update(student);
 }
+/**
+ * @param {org.example.empty.tr_Modify_attend} tr_Modify_attend
+ * @transaction
+ */
+async function tr_Modify_attend(modify_attend){
+    var teacher = modify_attend.teacher;
+    var course = modify_attend.course;
+    //var studnet_id = caculcate_attend.student_id;
+   // var course_id = caculcate_attend.course_id;
+    for(var i = 0 ; i < teacher.teach.length ; i++){
+        if(modify_attend.unit_course_id === teacher.teach[i]){ //老師要修改的unit，檢查是否老師有教這個課程
+            for(var j = 0 ; j < course.student.length ; j++){
+                if(modify_attend.student_id === course.student[j].student_id){ //看
+                    course.student[j].status = modify_attend.status;
+                }
+            }        
+        
+        }
+    }
+    const asset_course = await getAssetRegistry('org.example.empty.Course');
+    await asset_course.update(course);
+
+}
