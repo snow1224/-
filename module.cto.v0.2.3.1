@@ -27,7 +27,7 @@ namespace org.example.empty
 enum Attend_status {
   o ATTEND
   o LATE
-  o ABSENCE
+  o ABSENCE   // default
 }
 
 /**
@@ -88,7 +88,7 @@ participant Student identified by student_id {
   o String student_class
   o String[] course_list
   o Integer unit_score  // 因為每個微課程中都需要分數
-
+  o Attend_status status
 }
 
 concept Student_set{
@@ -125,7 +125,18 @@ transaction tr_Input_score {
 
 transaction tr_Caculcate_attend{
   --> Teacher teacher
-  --> Student studnet
+  --> Course course
+  o String student_id
+  o String unit_course_id
+  o Attend_status status
+}
+
+transaction tr_Modify_attend{
+  --> Teacher teacher
+  --> Course course
+  o String student_id
+  o String unit_course_id
+  o Attend_status status
 }
 
 transaction stu_Select_course{
@@ -180,5 +191,4 @@ transaction tr_Modify_score {
   --> Student student
   --> Teacher teacher   //  只有該課老師才可以打分數，似乎要寫ACL
   --> Course course
-
 }
