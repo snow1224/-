@@ -73,7 +73,7 @@ asset Course identified by course_id {
   o Integer score   optional
   o Course[] unit_course  optional
   o Integer avg_score  optional
-  o String[] student  
+  o Student[] student  
 }
 
 
@@ -87,6 +87,8 @@ participant Student identified by student_id {
   o String student_name
   o String student_class
   o String[] course_list
+  o Integer unit_score  // 因為每個微課程中都需要分數
+
 }
 
 concept Student_set{
@@ -101,7 +103,7 @@ participant Teacher identified by teacher_id {
   o String teacher_id
   o String teacher_email
   o String teacher_name
-  o unit[] teach
+  o String[] teach
   --> Student[] student_list
   o Student_set[] student_status
 }
@@ -170,4 +172,13 @@ transaction cc_Add_unit_course{
   o String[] accepts
   --> Course_center course_center
   --> Course course
+}
+transaction tr_Modify_score {
+  o Integer score
+  o String unit_course_id
+  o String student_id
+  --> Student student
+  --> Teacher teacher   //  只有該課老師才可以打分數，似乎要寫ACL
+  --> Course course
+
 }
