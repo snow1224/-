@@ -192,3 +192,36 @@ transaction tr_Modify_score {
   --> Teacher teacher   //  只有該課老師才可以打分數，似乎要寫ACL
   --> Course course
 }
+
+concept teacher_object{
+  o String teacher_id
+  o String teacher_email
+  o String teacher_name
+  o String[] teach
+  --> Student[] student_list
+  o Student_set[] student_status
+}
+
+transaction cc_Add_teacher {
+  o teacher_object[] teachers
+}
+
+concept student_object{
+  o String student_id
+  o String student_name
+  o String student_class
+}
+
+transaction cc_Add_student {
+  o student_object[] students
+}
+
+concept cc_object{
+  o String cc_id
+  o String cc_name   // 行政人員名字
+  --> Teacher teacher
+}
+
+transaction cc_Add_cc {
+  o cc_object[] ccs
+}
