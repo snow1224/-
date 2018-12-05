@@ -195,3 +195,71 @@ async function tr_Modify_attend(modify_attend){
     await asset_course.update(course);
 
 }
+
+/**
+ * @param {org.example.empty.cc_Add_teacher} cc_Add_teacher
+ * @transaction
+ */
+async function cc_Add_teacher(add_teacher){
+    var NS = 'org.example.empty';
+    var teachers = add_teacher.teachers;
+    var factory = getFactory();
+    for(var i=0;i<teachers.length;i++){
+        const new_teacher = factory.newResource(NS,'Teacher',teachers[i].teacher_id);
+        new_teacher.teacher_id = teachers[i].teacher_id;
+        new_teacher.teacher_email = teachers[i].teacher_email;
+        new_teacher.teacher_name = teachers[i].teacher_name;
+        new_teacher.teach = [];
+        new_teacher.student_list = [];
+        new_teacher.student_status = [];
+        const teacher_registry = await getParticipantRegistry(new_teacher.getFullyQualifiedType());
+        await teacher_registry.add(new_teacher);
+    }
+    
+}
+
+
+/**
+ * @param {org.example.empty.cc_Add_student} cc_Add_student
+ * @transaction
+ */
+async function cc_Add_student(add_student){
+    var NS = 'org.example.empty';
+    var students = add_student.students;
+    var factory = getFactory();
+    for(var i=0;i<students.length;i++){
+        const new_student = factory.newResource(NS,'Student',students[i].student_id);
+        new_student.student_id = students[i].student_id;
+        new_student.student_name = students[i].student_name;
+        new_student.student_class = students[i].student_class;
+        new_student.course_list = [];
+        new_student.unit_score = 0;
+        new_student.status = "ABSENCE";
+        const student_registry = await getParticipantRegistry(new_student.getFullyQualifiedType());
+        await student_registry.add(new_student);
+    }
+    
+}
+
+/**
+ * @param {org.example.empty.cc_Add_cc} cc_Add_cc
+ * @transaction
+ */
+async function cc_Add_cc(add_cc){
+    var NS = 'org.example.empty';
+    var ccs = add_cc.ccs;
+    var factory = getFactory();
+    for(var i=0;i<ccs.length;i++){
+        const new_cc = factory.newResource(NS,'Course_center',ccs[i].cc_id);
+        new_cc.cc_id = ccs[i].cc_id;
+        new_cc.cc_name = ccs[i].cc_name;
+        new_cc.teacher = ccs[i].teacher;
+       // new_cc.cc_class = students[i].student_class;        
+
+
+        const cc_registry = await getParticipantRegistry(new_cc.getFullyQualifiedType());
+        await cc_registry.add(new_cc);
+    }
+    
+}
+
