@@ -76,7 +76,19 @@ async function cc_Add_course(addCourse){
     const course_registry = await getAssetRegistry(new_course.getFullyQualifiedType());
     await course_registry.add(new_course);
 }
-/////////////problem 刪除不掉，delete,splice刪不掉，但pop()可以//////////////
+
+////////////////////
+function remove(list,index){
+    list[index]=null;
+    var tmp = new Array(list.length-1);
+    for(var i=index;i<list.length-1;i++){
+        list[i]=list[i+1];
+    }
+    tmp=list.slice(0,list.length-1);
+    return tmp;
+}
+////////////////////
+/////////////problem 刪除不掉，delete,splice刪不掉，但pop()可以////////////// 2018/12/09 solved yeah hahahahah
 /**
  * @param {org.example.empty.stu_delete_unit} stu_delete_unit
  * @transaction
@@ -86,26 +98,32 @@ async function stu_delete_unit(stu_delete_unit){
     var student_id = stu_delete_unit.student_id;  // string 
     var student = stu_delete_unit.student;   // --> student
     var course_list = stu_delete_unit.course_list;  // --> course
+    
     const participant_stu = await getParticipantRegistry('org.example.empty.Student');
     for(var i=0;i<delete_unit.length;i++){
         var item = delete_unit[i];
         //刪除學生中的unit id
         for(var j=0;j<student.course_list.length;j++){
             if(item === student.course_list[j]){
-                student.course_list.remove(j);
-                alert(student.course_list);
+                student.course_list=remove(student.course_list,j);
               	break;
             }
         }
        
    	   await participant_stu.update(student);
         //刪除課程中的student id
+        for(var j=0;j<course_list.student.length;j++){
+            if(course_list.student[j].student_id===student_id){
+                course_list.student=remove(course_list.student,j);
+            }
+        }
         for(var j=0;j<course_list.unit_course.length;j++){
             var unit_id = course_list.unit_course[j].course_id;
             if(unit_id === item){
                 for(var k=0;k<course_list.unit_course[j].student.length;k++){
                     if(student_id === course_list.unit_course[j].student[k].student_id){
-                        delete course_list.unit_course[j].student[k];
+                        course_list.unit_course[j].student=remove(course_list.unit_course[j].student,k);
+                        break;
                     }
                 }
             }
@@ -263,3 +281,10 @@ async function cc_Add_cc(add_cc){
     
 }
 
+/**
+ * @param {org.example.empty.stu_settlement_credit} stu_settlement_credit
+ * @transaction
+ */
+async function stu_settlement_credit(settlement_credit){
+
+}
