@@ -70,13 +70,16 @@ asset Course identified by course_id {
   o String introduce
   o Integer max_student
   o Integer current_student
-  o Integer score   optional
+  o Integer score   optional  // mean??
   o Course[] unit_course  optional
   o Integer avg_score  optional
   o Student[] student  
 }
 
-
+concept score_table{
+  o String course_id //大課程id
+  o Integer score //加權後分數
+}
 
 
 /**
@@ -89,6 +92,7 @@ participant Student identified by student_id {
   o String[] course_list
   o Integer unit_score  // 因為每個微課程中都需要分數
   o Attend_status status
+  o score_table[] score optional
 }
 
 concept Student_set{
@@ -224,4 +228,10 @@ concept cc_object{
 
 transaction cc_Add_cc {
   o cc_object[] ccs
+}
+
+transaction stu_settlement_credit{
+  o String[] list
+  --> Student student
+  --> Course course
 }
