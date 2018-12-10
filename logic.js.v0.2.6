@@ -33,12 +33,19 @@ async function stu_Select_course(selectCourse) {   // eslint-disable-line no-unu
     for(var i = 0 ; i < unit_course.length ; i++){
        if( course.unit_course[i].course_id ===  unit_course_id){
             course.unit_course[i].current_student++;
- //           course.unit_course[i].students.push(student);
+            course.unit_course[i].student.push(student);
         }
     }
     //
     // 學生那邊放入課程id
     student.course_list.push(unit_course_id);
+    var boo = 0;
+    for(var i=0;i<student.father_course.length;i++){
+        if(student.father_course[i]===course.course_id){
+            boo=1;
+        }
+    }
+    if(boo===0) student.father_course.push(course.course_id);
     const participant_stu = await getParticipantRegistry('org.example.empty.Student');
     await participant_stu.update(student);
     const asset_course = await getAssetRegistry('org.example.empty.Course');
@@ -115,6 +122,7 @@ async function stu_delete_unit(stu_delete_unit){
         for(var j=0;j<course_list.student.length;j++){
             if(course_list.student[j].student_id===student_id){
                 course_list.student=remove(course_list.student,j);
+                break;
             }
         }
         for(var j=0;j<course_list.unit_course.length;j++){
@@ -128,6 +136,7 @@ async function stu_delete_unit(stu_delete_unit){
                 }
             }
         }
+        course_list.current_student-=1;
         //
     }
     const asset_course = await getAssetRegistry('org.example.empty.Course');
@@ -160,6 +169,7 @@ async function cc_Add_unit_course(add_unit_course){
     new_course.unit_course = [];
     new_course.current_student = add_unit_course.current_student;
     new_course.student=[];
+    new_course.father_course=course.getIdentifier();
     course.unit_course.push(new_course);
     const asset_course = await getAssetRegistry('org.example.empty.Course');
     await asset_course.update(course);
@@ -253,6 +263,7 @@ async function cc_Add_student(add_student){
         new_student.course_list = [];
         new_student.unit_score = 0;
         new_student.status = "ABSENCE";
+        new_student.father_course=[];
         const student_registry = await getParticipantRegistry(new_student.getFullyQualifiedType());
         await student_registry.add(new_student);
     }
@@ -281,10 +292,33 @@ async function cc_Add_cc(add_cc){
     
 }
 
+
 /**
  * @param {org.example.empty.stu_settlement_credit} stu_settlement_credit
  * @transaction
  */
+// score['001'] = [90,98];
 async function stu_settlement_credit(settlement_credit){
+    var student = settlement_credit.student;
+    var course = settlement_credit.course;
+    var stu_course_list = student.course_list;
+    var dic_rec = new Array();
+    /**
+     * 在學生欄位建立大課程id的陣列。
+     * 從大課程欄位去撈資料，找學生修課的unit課id
+     * 找到就存成 [{0011:90}]
+     * 在針對分數進行排序
+     * 最後用unit_id找時數，比較大課程的時數是否符合
+     */
+/*    for(var i=0;i<stu_course_list.length;i++){
+        for(var j=0;j<course.unit_course.length;j++){
+          if(stu_course_list[i]===course.unit_course[j].course_id){
+              dic_rec[stu_course_list[i]]=course.unit_course[j].father_course;
+          }
+      }
+    }*/
+    
+    
 
-}
+  }
+  
