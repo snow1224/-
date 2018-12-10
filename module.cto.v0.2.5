@@ -74,6 +74,7 @@ asset Course identified by course_id {
   o Course[] unit_course  optional
   o Integer avg_score  optional
   o Student[] student  
+  o String father_course optional
 }
 
 concept score_table{
@@ -81,6 +82,10 @@ concept score_table{
   o Integer score //加權後分數
 }
 
+concept Dic{
+  o String key
+  o String val
+}
 
 /**
  * A Student is a type of participant in the network
@@ -93,6 +98,7 @@ participant Student identified by student_id {
   o Integer unit_score  // 因為每個微課程中都需要分數
   o Attend_status status
   o score_table[] score optional
+  o String[] father_course optional
 }
 
 concept Student_set{
