@@ -237,7 +237,7 @@ transaction cc_Add_cc {
 }
 
 transaction stu_settlement_credit{
-  o String[] list
+//  o String[] list
   --> Student student
   --> Course course
 }
