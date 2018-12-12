@@ -297,19 +297,17 @@ async function cc_Add_cc(add_cc){
  * @param {org.example.empty.stu_settlement_credit} stu_settlement_credit
  * @transaction
  */
-// score['001'] = [90,98];
 async function stu_settlement_credit(settlement_credit){
     var student = settlement_credit.student;
     var course = settlement_credit.course;
     var stu_course_list = student.course_list;
-    var dic_rec = new Array();
     /**
-     * 在學生欄位建立大課程id的陣列。
+     * 在學生欄位建立大課程id的陣列。   o
      * 從大課程欄位去撈資料，找學生修課的unit課id
      * 找到就存成 [{0011:90}]
-     * 在針對分數進行排序
+     * 在針對分數進行排序 
      * 最後用unit_id找時數，比較大課程的時數是否符合
-     */
+     */ // score['001'] = [90,98];
 /*    for(var i=0;i<stu_course_list.length;i++){
         for(var j=0;j<course.unit_course.length;j++){
           if(stu_course_list[i]===course.unit_course[j].course_id){
@@ -317,7 +315,25 @@ async function stu_settlement_credit(settlement_credit){
           }
       }
     }*/
+    var unit_score = new Array();
+    for(var k=0;k<student.father_course.length;k++){
+        for(var i=0;i<course.unit_course.length;i++){
+             if(student.father_course[k] === course.unit_course[i].father_course){
+                for(var j=0;j<course.unit_course[i].student.length;j++){
+                    if(student.student_id === course.unit_course[i].student[j].student_id){
+                        unit_score[course.unit_course.course_id]=course.unit_course[i].student[j].score;
+                    }
+                }
+             }
+        }
+     //   var dic_rec=Object.keys(unit_score).sort(function(a,b){return unit_score[a]-unit_score[b]});
+        for(ki in unit_score){                     
+            alert(unit_score[ki]+":"+unit_score[ki]+",");
+         }
+    }
     
+    
+
     
 
   }
