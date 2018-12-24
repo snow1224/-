@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">設定</string>
+    <string name="plantName">植物名稱:</string>
+    <string name="edIdWet">濕度設定:</string>
+    <string name="btPtOk">確定</string>
+    <string name="htName">輸入植物名稱</string>
+    <string name="htWet">輸入溼度值</string>
+    <string name="edRange">濕度範圍(+-多少):</string>
+    <string name="htRange">輸入溼度值+-數值 ex:5</string>
+    <string name="tvSetSucc">設定成功！</string>
+    <string name="tvSetWet">濕度範圍:</string>
+    <string name="btFirst">請點擊進入~</string>
+    <string name="tvAccount">帳號:</string>
+    <string name="tvPassword">密碼:</string>
+    <string name="htAccount">輸入帳號</string>
+    <string name="htPassword">輸入密碼</string>
+    <string name="tvNickname">用戶名:</string>
+    <string name="tvEmail">信箱:</string>
+    <string name="htNickname">匿名 ex: 小明</string>
+    <string name="htEmail">輸入常用的信箱，已便系統傳送忘記的密碼</string>
+    <string name="btLogReg">註冊帳號</string>
+    <string name="tvLogout">登出</string>
+    <string name="tvBackLogin">回到登入畫面</string>
+    <string name="tvHistoryRecord">歷史紀錄</string>
+    <string name="cdGoodstatus">良好</string>
+    <string name="btPtSet">植物設定</string>
+    <string name="btSetSucBack">返回查看</string>
+    <string name="tvSelectManu">選單</string>
+    <string-array name="spnManuList">
+        <item>歷史紀錄</item>
+        <item>植物設定</item>
+        <item>帳戶設定</item>
+        <item>登出</item>
+    </string-array>
+    <string name="tvAccSet">帳戶設定</string>
+    <string name="tvSetPlant">設定植物資料</string>
+    <string name="tvSetAccount">設定帳戶</string>
+    <string name="tvViewStatus">查看植物狀態</string>
+    <string name="tvAddPlantData">新增植物資料</string>
+    <string name="tvDelPlantData">刪除植物資料</string>
+    <string name="tvRewritePlant">修改植物資料</string>
+    <string name="tvLogoutMsg">登出成功！</string>
+    <string name="btIdBackLogin">返回登入</string>
+    <string name="btIdFin">結束app</string>
+    <string name="btIdtest">資料庫測試</string>
+    <string name="btRewrite">修改</string>
+    <string name="btPre">上一筆</string>
+    <string name="btNext">下一筆</string>
+    <string name="btDelete">刪除</string>
+    <string name="btAdd">新增</string>
+    <string name="bton">ON</string>
+    <string name="btconnect">CONNECT</string>
+    <string name="btoff">OFF</string>
+    <string name="btbluetest">bluetest</string>
+    <string name="btIdBlueDet">藍牙偵測</string>
+</resources>
