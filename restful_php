@@ -1,0 +1,73 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Ajax Call Hyperledger Composer Restful API</title>
+</head>
+<script src="jquery_1.12.4.min.js"></script>
+
+
+
+
+<body>
+<?php
+
+function callAPI($method, $url, $data){
+    $curl = curl_init();
+
+    switch ($method){
+        case "POST":
+            curl_setopt($curl, CURLOPT_POST, 1);
+            if ($data)
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            break;
+        case "PUT":
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
+            if ($data)
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            break;
+        default:
+            if ($data)
+                $url = sprintf("%s?%s", $url, http_build_query($data));
+    }
+
+    // OPTIONS:
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        'APIKEY: 111111111111111111111',
+        'Content-Type: application/json',
+    ));
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+    // EXECUTE:
+    $result = curl_exec($curl);
+    if(!$result){die("Connection Failure");}
+    curl_close($curl);
+    return $result;
+}
+
+$get_data = callAPI('GET', 'http://120.110.113.123:3000/api/org.transport.network.student', false);
+$response = json_decode($get_data, true);
+//$errors = $response['response']['errors'];
+$data = $response[0]['id'];
+echo "<br>======!!!!!!!!!!!!!=============<br>";
+echo $get_data ;
+echo "<br>===================<br>";
+    echo $data;
+?>
+
+
+
+<p>Ajax Call Hyperledger Composer Restful API</p>
+<div>
+
+    Add New Player<br>
+    email:
+    <input id="txtPlayerID" name="txtPlayerID" type="text"> FirstName:<input id="txtPlayerFirstName" name="txtPlayerFirstName" type="text"> id:<input id="txtPlayerLastName" name="txtPlayerLastName" type="text">
+    <br>
+    <input id="btnAddPlayer" name="btnAddPlayer" type="button" value="Add Player">
+    <div id="divResponse" name="divResponse" style="width:95%;color:#0000ff;"></div>
+
+</div>
+</body>
+</html>
