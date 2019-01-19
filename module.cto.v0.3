@@ -1,0 +1,253 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * A business network for shipping perishable goods
+ * The cargo is temperature controlled and contracts
+ * can be negociated based on the temperature
+ * readings received for the cargo
+ */
+
+namespace org.example.empty
+
+
+
+enum Class_type{
+  o PROFESSION
+  o NORMAL
+  o LAB
+  o OFFICE
+}
+
+enum Attend_status{
+  o ATTEND
+  o LATE
+  o ABSENCE
+}
+
+//CTO資料型別可參考 https://hyperledger.github.io/composer/latest/reference/cto_language
+asset semester_list identified by semester_list_id {
+  o String semester_list_id//新增一組編號當識別碼以區分這一筆記錄，例如：4碼西元年＋1碼學期＋4碼流水號，2019A0001  V
+  o String start_year
+  o String semester
+  --> Main_course main_course
+}
+
+asset Main_course identified by Main_course_id{
+  o String Main_course_id   //識別碼都是id容易混淆，可以用較完整的命名id，同時思考id應該怎麼組成？__________V
+  o String name 
+  o Integer credit
+  --> department department    //應該採關連Asset department   V
+  o Boolean external_status  //可以用Boolean表示Y/N    V
+  o Double pass_hours      //若有非整數，應該採Double的資料型別   V
+  o Boolean use_status       //應該用Boolean表示Y/N   V
+}
+
+asset unit_course identified by unit_course_id{
+  o String unit_course_id   //識別碼都是id容易混淆，可以用較完整的命名id，同時思考id應該怎麼組成？__________V
+  o String name
+  o String start_time
+  o String end_time
+  o Double hours         //若有非整數，應該採Double的資料型別   V
+  o String weeks
+  --> department  department //應該關連Asset department  V
+  --> teacher teacher          //應該關連Participant teacher V
+  o Integer max_stu
+  --> classroom classroom   //應該關連Asset classroom V
+  o Double pass_score    //若有非整數，應該採Double的資料型別 V
+  o Integer selection_course_people
+  o String introduction
+  o Boolean use_status //應該用Boolean表示Y/N，不需使用Enum Use_status  V
+  --> Main_course Main_course//少關連主課程 V
+}
+
+asset classroom identified by classroom_id{
+  o String classroom_id   //識別碼都是id容易混淆，可以用較完整的命名id，同時思考id應該怎麼組成？__________V
+  o String name
+  o Class_type class_type
+  o Boolean use_status
+  --> department department
+  --> building building
+}
+
+asset building identified by building_id{
+  o String building_id   //識別碼都是id容易混淆，可以用較完整的命名id，同時思考id應該怎麼組成？__________V
+  o String name
+}
+
+asset department identified by department_id{
+  o String department_id   //識別碼都是id容易混淆，可以用較完整的命名id，同時思考id應該怎麼組成？__________V
+  o String name
+  o String faculty_name optional //學院名稱應該是optional，例如教務處不隸屬任何學院。或改為上級單位id，再關連Asset department，例如註冊組與學務處的關係，資管系與資訊學院的關係。 V
+}
+
+//teacher、office_clerk、student都有共通屬性id、name、email、department，應該使用Abstract Participant，繼承後再各自設定不同的屬性
+//老師應該是Participant
+abstract participant personal_data identified by id{
+  o String id
+  o String name
+  o String email
+  -->  department department
+}
+
+enum degree{
+  o  President //校長
+  o  Vice_President //副校長
+  o  Dean  // 院長
+  o  Chair  //系主任、所長
+  o  Professor //教授
+  o  Associate_Professor //副教授
+  o  Assistant_Professor // 助理教授
+  o  Lecturer //講師
+  o  University_Chair_Professor //講座教授
+  o  Distinguished_Professor // 特聘教授
+  o  Emeritus_Professor  // 名譽教授
+  o  Visiting_Professor //客座教授
+  o  Visiting_Associate_Professor //客座副教授
+  o  Visiting_Assistant_Professor //客座助理教授
+  o  Visiting_Lecturer // 客座講師
+  o  Exchanged_Professor // 交換教授
+  o  Exchanged_Associate_Professor // 交換副教授
+  o  Exchanged_Assistant_Professor  // 交換助理教授
+  o  Exchanged_Lecturer //交換講師
+  o  Part_time_Professor //兼任教授
+  o  Contracted_Professor //函聘教授
+  o  Contracted_Associate_Professor //函聘副教授
+  o  Contracted_Assistant_Professor //函聘助理教授
+  o  Contracted_Lecturer //函聘講師
+  o  Jointly_Appointed_Professor //合聘教授
+  o  Jointly_Appointed_Associate_Professor //合聘副教授
+  o  Jointly_Appointed_Assistant_Professor  // 合聘助理教授
+  o  Jointly_Appointed_Lecturer  // 合聘講師
+  o  Teaching_Assistant //助教
+  o  Director  //  主任
+  o  Acting_Director // 代理主任
+  o  Secretary  // 秘書
+}
+
+participant teacher extends personal_data{
+  o String grade  //職等或學歷可以設定成Enum，寫學校 V
+  o degree degree
+  --> building building
+}
+
+//行政人員應該是Participant
+participant office_clerk extends personal_data{
+  o String job
+}
+
+//學生應該是Participant
+participant student extends personal_data {
+     //取消此屬性，應該是Asset select_record關連Participant student  V
+}
+
+asset select_record identified by select_record_id{
+  o String select_record_id   //識別碼都是id容易混淆，可以用較完整的命名id，同時思考id應該怎麼組成？__________V
+  --> semester_list semester_list //若關連回Asset semester_list，semester、start_year、main_course_id屬性就可以取消 V
+  o Attend_status attend_status
+  o Boolean pass_status       //應該用Boolean表示Y/N，不需使用Enum Pass_status V
+  o Double score                 //若有非整數，應該採Double的資料型別 V
+  --> student student             //應該關連Participant student V
+  --> unit_course unit_course                //應該關連Asset unit_course V
+}
+//===================這邊先用php傳入格式，2/28後，可以用這邊定義格式
+// transaction cc_Add_course{
+  
+// }
+
+// transaction cc_Add_unit_course{
+  
+// }
+
+// transaction cc_Add_teacher {
+  
+// }
+
+// transaction cc_Add_student {
+  
+// }
+
+// transaction cc_Add_cc {
+  
+// }
+
+// //========================================2==========================
+// transaction cc_Del_course{
+    
+// }
+
+// transaction cc_Del_unit_course{
+  
+// }
+
+// transaction cc_Del_teacher {
+  
+// }
+
+// transaction cc_Del_student {
+  
+// }
+
+// transaction cc_Del_cc {
+  
+// }
+// // ========================================3==============================
+// transaction cc_Modify_course{
+    
+// }
+
+// transaction cc_Modify_unit_course{
+  
+// }
+
+// transaction cc_Modify_teacher {
+  
+// }
+
+// transaction cc_Modify_student {
+  
+// }
+
+// transaction cc_Modify_cc {
+  
+// }
+
+// transaction stu_Select_course{
+  
+// }
+
+// transaction stu_delete_unit{
+  
+// }
+
+transaction tr_Input_score {
+  --> select_record select_record
+  
+}
+
+transaction tr_Modify_score {
+  
+}
+
+// transaction tr_Caculcate_attend{
+  
+// }
+
+// transaction tr_Modify_attend{
+  
+// }
+
+// transaction stu_settlement_credit{
+  
+// }
