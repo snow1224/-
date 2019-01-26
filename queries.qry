@@ -1,0 +1,7 @@
+query select_score{
+    description: "Select one of all student score in sequence DESC"
+    statement: SELECT org.example.empty.select_record
+               WHERE ((_$student == student) 
+                     AND (_$mainCourse == unit_course.Main_course))
+               ORDER BY score DESC
+}
