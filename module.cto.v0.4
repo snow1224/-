@@ -98,6 +98,7 @@ abstract participant personal_data identified by id{
   o String id
   o String name
   o String email
+  o String password
   -->  department department
 }
 
@@ -160,6 +161,7 @@ asset select_record identified by select_record_id{
   o Double score                 //若有非整數，應該採Double的資料型別 V
   --> student student             //應該關連Participant student V
   --> unit_course unit_course                //應該關連Asset unit_course V
+  --> Main_course main_course
 }
 //===================這邊先用php傳入格式，2/28後，可以用這邊定義格式
 // transaction cc_Add_course{
@@ -231,17 +233,18 @@ asset select_record identified by select_record_id{
   
 // }
 
-transaction tr_Input_score {
-  --> select_record select_record
+// transaction tr_Input_score {
+//   --> select_record select_record
   
-}
+// }
 
-transaction tr_Modify_score {
+// transaction tr_Modify_score {
   
-}
+// }
 
 // transaction tr_Caculcate_attend{
-  
+//   --> select_record select_record
+//   --> student student
 // }
 
 // transaction tr_Modify_attend{
@@ -249,5 +252,5 @@ transaction tr_Modify_score {
 // }
 
 // transaction stu_settlement_credit{
-  
+//   --> student student
 // }
