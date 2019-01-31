@@ -1,0 +1,281 @@
+<?php
+ob_start();
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+  <title>SF</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./css/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+  <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"-->
+  <link rel="stylesheet" href="w3.css">
+  <link rel="stylesheet" href="w3-theme.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script-->
+  <script src="./css/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+  <style>
+  /* Make the image fully responsive */
+  .carousel-inner img {
+      width: 500px;
+      height: 500px;
+  }
+  .course-block{
+      border:2px #ccc solid;
+      border-radius:10px;
+      height:500px;
+      background-color:#58F;
+      width: 30%;
+      float:left;
+      margin:5px 5px 5px 0px;
+  }
+  .unit-course-block{
+      border:1px #ccc solid;
+      border-radius:10px;
+      height:20%;
+      background-color:#8F4;
+      width: 80%;
+  }
+  .popover-title {
+     color: #000;
+     font-weight: bold;
+     background-color: greenyellow;
+  }
+  .popover-content {
+      color: #000;
+      word-break: break-all;
+      background-color:lightyellow;
+  }
+  </style>
+  <script>
+      $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();   
+      });
+  </script>
+</head>
+<body>
+<!--自動生成課程區塊-->
+<?php
+    function add_new_course(){
+        
+    }
+?>
+<!--自動生成課程區塊-->
+<!--加選購物車項目-->
+<?php
+    if( isset($_POST["add"]) ) {
+        $id = $_POST["add"];
+        
+            switch (strtoupper($id)){
+                case "A001":
+                    $_SESSION["shopping"]['A001']["id"]="a001";
+                    $_SESSION["shopping"]['A001']["name"]="微課程a001";
+                    $_SESSION["shopping"]['A001']["resource"]="resource:org.example.empty.unit_course#a001";
+                    break;
+            }
+        }else if( isset($_POST["del_unit_course"]) ){
+            $id = $_POST["del_unit_course"];
+            unset($_SESSION['shopping'][$id]);
+        }
+        else if( isset($_POST["like"]) ){
+            $unit_course_id = $_POST["like"];
+            switch (strtoupper($unit_course_id)){
+                case "A001":
+                    $_SESSION["shopping"]['A001']["id"]="a001";
+                    $_SESSION["shopping"]['A001']["name"]="微課程a001";
+                    $_SESSION["shopping"]['A001']["resource"]="resource:org.example.empty.unit_course#a001";
+                    break;
+            }
+        }
+    
+
+?> 
+ <!--加選-->
+  <!-- Indicators -->
+        
+      <nav class="navbar navbar-inverse">
+          <div class="container-fluid">
+            <div class="navbar-header">
+                  <a class="navbar-brand" href="#">UnitCourseWeb</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                      <li><a href="#"><span class="glyphicon glyphicon-star"></span> 我的最愛</a></li>
+                      <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> 選課</a></li>
+                      <li><a href="./login_page.php"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+                      <li><a href="./logout.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            </ul>
+          </div>
+      </nav>
+      
+    <div class="container" style="width:100%;">
+          <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="0">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                  <li data-target="#myCarousel" data-slide-to="1"></li>
+                  <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                <div class="item active">
+                
+                <div class="w3-row-padding">
+                
+                <!-- start  -->
+                <div class="w3-third w3-section">
+                <div class="w3-card-4">
+                <div class="w3-container w3-blue" style="height: 500px; overflow: scroll;">
+                  <form action="index.php" method="post"> 
+                   <center>
+                    <h4>A課程</h4>
+                       
+                        <a href="#"><div class="unit-course-block" title="a001微課程" data-toggle="popover" data-trigger="hover" data-placement="bottom" data-html="true" data-content="
+                            <h4>課程介紹</h4><br><br>
+                            <h4>授課老師</h4><br>
+                            姓名:<br>
+                            系所:<br>
+                            學位:<br>
+                            職位:<br>
+                            <h4>上課時間、地點</h4><br>
+                            時間: ~ <br>
+                            地點:<br>
+                            時數:<br>
+                            ">
+                            <div class="form-group"> 
+                            <!--a href="#"--><h3>微課程a001
+                                <span class="w3-badge w3-green" style="float:right;margin:0px 2px 0px 0px;">6</span>    
+                                        <button type="submit" name="like" class="btn btn-warning" value="A001" style="float:right;margin:0px 2px 0px 0px;">
+                                                <span class="glyphicon glyphicon-star"></span>
+                                        </button>
+
+                                        <button type="submit" name="add" class="btn btn-success" value="A001"  style="float:right;margin:0px 2px 0px 0px;">
+                                                  <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+
+                            </h3><!--/a-->
+                            </div>
+                        </div>
+                        </a>
+                        
+                       
+                       
+                       
+                       
+                    </center>
+                    </form>
+                </div>
+                </div>
+                </div>
+                <!-- end  -->
+                </div>
+                </div>
+                <!--second page-->
+                <div class="item">
+                
+                </div>
+                
+                <!-- end  -->
+                
+                
+                <!--second page end-->
+                <!--third page start-->
+                <div class="item">
+                
+                </div>
+                
+                <!--third page end-->
+                
+                
+              </div>
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev" style="top:1500;" >
+                  <span class="glyphicon glyphicon-chevron-left" ></span>
+                  <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next" style="top:1500; ">
+                  <span class="glyphicon glyphicon-chevron-right"></span>
+                  <span class="sr-only">Next</span>
+            </a> 
+    </div>
+    </div>
+    <center>
+        <span class="w3-badge w3-green">?</span><span class="w3-badge w3-red">?</span>剩餘人數，紅色表示小於4
+    </center>
+    <br>
+    
+    <!--/////////////shopping-cart///////////////-->
+      <div class="w3-row-padding">
+            <div class="w3-third w3-section" style="text-align:right;   
+                                                    position:fixed;
+                                                    right: 0%;
+                                                    bottom: 0%;
+                                                    margin-bottom:5px;
+                                                    margin-right:5px;"><!-- 將購物車放在右下角，注意字也會向右靠 -->
+                  <ul class="nav nav-tabs" >
+                        <li><a href="#A" class="acative" data-toggle="tab" style="background-color:skyblue">A課程<?php $main_course_id?></a></li>
+                        <li><a href="#B" data-toggle="tab" style="background-color:skyblue">B課程</a></li>
+                   </ul>
+                  <div class="w3-container w3-pale-blue" style="height: 250px; overflow: scroll; overflow-x: hidden;">
+                   
+                   <br>
+               
+                   <div class="tab-content">
+                    <?php   
+                       foreach($_SESSION as $key0 => $value0){
+                             if($key0!="account"){
+                              echo '<div id="'.$key0.'" class="tab-pane fade in active">';
+                                  foreach ($_SESSION[$key0] as $key => $value){
+                                      echo '<form action="index.php" method="post">';
+                                      echo '<center>';
+                                      echo '<div class="form-group">';     
+                                      echo '<a href="#"><div class="unit-course-block">';   
+                                      echo '<h3>'.$_SESSION[$key0][$key]["name"];  
+                                      echo '<button type="submit" name="like" class="btn btn-warning" value="A001" style="float:right;margin:0px 2px 0px 0px;">';
+                                      echo '<span class="glyphicon glyphicon-star"></span>';
+                                      echo '</button>';
+                                      echo '<button type="submit" name="del_unit_course" class="btn btn-danger" value="A001"  style="float:right;margin:0px 2px 0px 0px;">';
+                                      echo '<span class="glyphicon glyphicon-minus"></span>';
+                                      echo '</button>';
+                                      echo '</h3>';
+                                      echo '</div></a>';   
+                                      echo '</div>';      
+                                      echo '</center>';  
+                                      echo '</form>';
+                                  }
+                              
+                              reset($_SESSION[$key0]);
+                              echo '</div>';
+                              }
+                          }
+                          reset($_SESSION);
+                    ?>
+                       
+                   </div>
+                   <br>
+                   <center>
+                       <button type="button" class="btn btn-info"><h5>選課</h5></button>
+                   </center>
+               </div>
+            </div>
+      </div>
+    <!--/////////////shopping-cart///////////////-->
+    
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="w3-theme-l3">
+       <center>
+        <p class="w3-large">Providence University</p>
+        </center>
+    </div>
+     
+</body>
+</html>
