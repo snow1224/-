@@ -15,20 +15,31 @@ session_start();
 
         }
         $head="Location:v1.login_tr_and_stu.php";
+        $position="";
         switch (strtolower($job)){
             case "stu":
                 $url = 'http://120.110.112.152:3000/api/org.example.empty.student/'.$useraccount;
                 $head = "Location:stu.php";
+                $position="student";
                 break;
             case "tr":
                 $url = 'http://120.110.112.152:3000/api/org.example.empty.teacher/'.$useraccount;
                 $head = "Location:tr.php";
+                $position="teacher";
+                break;
+            case "staff":
+                $url = 'http://120.110.112.152:3000/api/org.example.empty.office_clerk/'.$useraccount;
+                $head = "Location:tr.php";
+                $position="staff";
                 break;
         }
         $get_data = callAPI('GET', $url, false);  //去學生欄位找$useraccount   若找不到會錯，若找的到
         $response = json_decode($get_data, true); // 把找到的結果解析
         if($response["id"] == $userpassword && $userpassword!=""){
             echo "帳號密碼正確喔! <br>";
+             $_SESSION["member"][$position]["account"]=$useraccount;
+             $_SESSION["member"][$position]["password"]=$userpassword;
+            
             header($head);
 
 
