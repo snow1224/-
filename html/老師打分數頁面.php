@@ -24,187 +24,106 @@ session_start();
 <?php
 $year = "1072";
 echo '<hr>'.$year.'授課課程</h2>';
-
+show_all_main_course();
 function show_all_main_course (){
     echo '<div id="accordion" >';
+    //先去看有幾個main course
+    $N_main_url ='http://120.110.112.152:3000/api/org.example.empty.Main_course';
+    //                        回傳一堆json檔案
+    $N_main_get_data = callAPI('GET', $N_main_url, false);
+    //                        把json解碼放response
+    $N_main_response = json_decode($N_main_get_data, true);
+//    echo $N_main_response[0]["Main_course_id"];
+    for($N_main = 0 ; $N_main < count($N_main_response); $N_main++){
+//        要置製造主課程的選單
         echo '<div class="card" >';
-            echo '<div id="M001" class="card-header" >';
-                echo '<button data-target="#all_unit_001" aria-controls="all_unit_001" class="btn btn-link" data-toggle="collapse"  aria-expanded="false">';
-                    echo "Main_course_A";
-                echo '</button>';
-            echo '</div>';
-    show_main_unit_course();
+        echo '<div id="'.$N_main_response[$N_main]["Main_course_id"].'" class="card-header" >';
+        // 做 以主課程為名的按鈕
+        echo '<button data-target="#'.$N_main_response[$N_main]["Main_course_id"].'lists" aria-controls="'.$N_main_response[$N_main]["Main_course_id"].'lists" class="btn btn-link" data-toggle="collapse"  aria-expanded="false">';
+            echo $N_main_response[$N_main]["name"];
+        echo '</button>';
+        echo '</div>';
+        // 傳主課程id過去，要做主課程中的微課程了
+        show_main_unit_course($N_main_response[$N_main]["Main_course_id"]);
+        echo '</div>';
+    }
+    echo '</div>';
+}
+function show_main_unit_course($N_main_id){
+//    //他的id叫做  M002lists  前面是主課程id，加上"lists"
+    echo '<div id="'.$N_main_id.'lists"  aria-labelledby="'.$N_main_id.'" class="collapse" >';
+    // 根據main id 找他有幾個微課程
+    $main_N_unit_url ='http://120.110.112.152:3000/api/queries/select_unit_course?Main_course=resource%3Aorg.example.empty.Main_course%23'.$N_main_id;
+    //      回傳一堆json檔案
+    $main_N_unit_get_data = callAPI('GET', $main_N_unit_url, false);
+    //                        把json解碼放response
+    $main_N_unit_response = json_decode($main_N_unit_get_data, true);
+
+    for($N_unit = 0 ; $N_unit < count($main_N_unit_response); $N_unit++){
+        echo '<div id="'.$main_N_unit_response[$N_unit]["unit_course_id"].'">';
+    //        每個unit table叫做  u002table  前面為unit id 加上table
+            echo '<button data-target="#'.$main_N_unit_response[$N_unit]["unit_course_id"].'table" aria-controls="'.$main_N_unit_response[$N_unit]["unit_course_id"].'table" class="btn btn-link" data-toggle="collapse"  >';
+                echo $main_N_unit_response[$N_unit]["name"];
+            echo '</button>';
+
+        echo '</div>';
+
+
+        echo '<div id="'.$main_N_unit_response[$N_unit]["unit_course_id"].'table"  aria-labelledby="'.$main_N_unit_response[$N_unit]["unit_course_id"].'" class="collapse"  >';
+    //            把unit id 傳過去
+            show_unit_table($main_N_unit_response[$N_unit]["unit_course_id"]);
+
+        echo '</div>';
+
+    }
 
     echo '</div>';
 }
-function show_main_unit_course(){
+//
+function show_unit_table ($get_unit_course_id){
+    echo '<table  border="1">';
+    echo '<tr> <th>學號</th> <th>姓名</th> <th>出缺席</th>  <th>分數</th> </tr>';
 
-}
-?>
-
-
-
-
-<div id="accordion" >
-    <!--    AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
-    <div class="card" >
-<!--       id="M001" 為 main id -->
-        <div id="M001" class="card-header" >
-<!--            <h5 class="mb-0">-->
-<!--            data-target="#all_unit_001" 為 main id + lists-->
-                <button data-target="#all_unit_001" aria-controls="all_unit_001" class="btn btn-link" data-toggle="collapse"  aria-expanded="false">
-                    A
-                </button>
-<!--            </h5>-->
-        </div>
-        <!--      <div id="all_unit_001"  aria-labelledby="M001" class="collapse"  > class有無show，就會看能不能自動展開  data-parent="#heading_02"屬性，  把data-parent拿掉，打開B就不會自動把A關起來-->
-<!--        id="all_unit_001" 為 main id + lists      &&  aria-labelledby="M001" 為main id -->
-        <div id="all_unit_001"  aria-labelledby="M001" class="collapse"  > <!-- data-parent="#accordion" -->
-<!--            a001  a001 a001 a001 a001-->
-<!--           id="collapse1" 為unit id -->
-            <div id="collapse1">
-<!--               data-target="#unit_course_a01" 為 unit id + table   &&  aria-controls="unit_course_a01"  為 unit id + table-->
-                <button data-target="#unit_course_a01" aria-controls="unit_course_a01" class="btn btn-link" data-toggle="collapse"  >
-                    A001
-                </button>
-            </div>
-<!--           id="unit_course_a01" 為unit id + table  &&   aria-labelledby="collapse1" 為unit id-->
-            <div id="unit_course_a01"  aria-labelledby="collapse1" class="collapse"  > <!-- data-parent="#M001" -->
-                <table  border="1">
-                    <tr><th>學號</th> <th>姓名</th> <th>出缺席</th>  <th>分數</th></tr>
-                    <!--                    第一個學生   -->
-
-                    <?php
-                        show_unit_table("u001");
-
-                        function show_unit_table($get_unit_course_id){
-                            $url = 'http://120.110.112.152:3000/api/queries/select_record_unit_course?unit_course=resource%3Aorg.example.empty.unit_course%23'.$get_unit_course_id;
-                        //                        回傳一堆json檔案
-                            $get_data = callAPI('GET', $url, false);
-                        //                        把json解碼放response
+    $get_unit_course_id_url = 'http://120.110.112.152:3000/api/queries/select_record_unit_course?unit_course=resource%3Aorg.example.empty.unit_course%23'.$get_unit_course_id;
+//                        回傳一堆json檔案
+    $get_unit_course_id_get_data = callAPI('GET', $get_unit_course_id_url, false);
+//                        把json解碼放response
 
 
-                            $response = json_decode($get_data, true);
-                        //                        echo count($response);
-                            for($n = 0 ; $n < count($response) ; $n++) {
-                                $stu = explode("#", $response[$n]["student"]);
-                                //                            echo $stu[1];
-                                echo '<tr>';
-                                echo '<td>' . $stu[1] . '</td>';
-                                $stu_url = 'http://120.110.112.152:3000/api/org.example.empty.student/' . $stu[1];
-                                //                                 echo $stu_url;
-                                //                                 echo "======".$n."<br>";
-                                $stu_get_data = callAPI('GET', $stu_url, false);
-                                //                                 echo $stu_get_data."<hr>";
-                                $stu_response = json_decode($stu_get_data, true);
-                                //                                 echo $stu_get_data;
-                                //                                 echo $stu_response["name"]."<hr>";
+    $get_unit_course_id_response = json_decode($get_unit_course_id_get_data, true);
+//                        echo count($response);
+    for($n = 0 ; $n < count($get_unit_course_id_response) ; $n++) {
+        $stu = explode("#", $get_unit_course_id_response[$n]["student"]);
+        //                            echo $stu[1];
+        echo '<tr>';
+        echo '<td>' . $stu[1] . '</td>';
+        $stu_url = 'http://120.110.112.152:3000/api/org.example.empty.student/' . $stu[1];
+        //                                 echo $stu_url;
+        //                                 echo "======".$n."<br>";
+        $stu_get_data = callAPI('GET', $stu_url, false);
+        //                                 echo $stu_get_data."<hr>";
+        $stu_response = json_decode($stu_get_data, true);
+        //                                 echo $stu_get_data;
+        //                                 echo $stu_response["name"]."<hr>";
 
-                                echo '<td>' . $stu_response["name"] . '</td>';
+        echo '<td>' . $stu_response["name"] . '</td>';
 
-                                echo '<td>';
+        echo '<td>';
+        $radio_name = $get_unit_course_id.$stu[1];
 
-                                echo '<input type="radio" name="attend' . $stu[1] . '" value="attend" checked="True">出席';
-                                echo '<input type="radio" name="attend' . $stu[1] . '" value="unattend">未出席';
-                                echo '</td>';
+        echo '<input type="radio" name="attend' .$radio_name. '" value="attend" checked="True">出席';
+        echo '<input type="radio" name="attend' .$radio_name. '" value="unattend">未出席';
+        echo '</td>';
 
-                                echo '<td> <input type="text" name="score" size="8" ><br><br> </td>';
-                                echo '</tr>';
-                            }
-
-                        }
-                     ?>
-
-
-                </table>
-            </div>
-<!--         a002   a002  a002   a002  a002-->
-            <div id="collapse2">
-                <button data-target="#unit_course_02" aria-controls="unit_course_02" class="btn btn-link" data-toggle="collapse"  >
-                    A002
-                </button>
-            </div>
-            <div id="unit_course_02"  aria-labelledby="collapse2" class="collapse"  > <!-- data-parent="#M001" -->
-                hi i am A002
-            </div>
-
-<!--            a003  a003  a003  a003  a003-->
-            <div id="collapse3">
-                <button data-target="#unit_course_03" aria-controls="unit_course_03" class="btn btn-link" data-toggle="collapse" >
-                    A003
-                </button>
-            </div>
-            <div id="unit_course_03"  aria-labelledby="collapse3" class="collapse"  > <!-- data-parent="#M001" -->
-                hi i am A003
-            </div>
-
-
-        </div>
-    </div>
-
-    <!--BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB-->
-
-
-    <div class="card" >
-        <div id="heading_02" class="card-header" >
-            <h5 class="mb-0">
-                <button data-target="#all_unit_002" aria-controls="all_unit_002" class="btn btn-link" data-toggle="collapse"  aria-expanded="false">
-                    B
-                </button>
-            </h5>
-        </div>
-        <div id="all_unit_002"  aria-labelledby="heading_02" class="collapse"  > <!-- data-parent="#accordion" -->
-            <div id="collapse1">
-                <button data-target="#unit_course_a02" aria-controls="unit_course_a02" class="btn btn-link" data-toggle="collapse"  >
-                    B001
-                </button>
-            </div>
-            <div id="unit_course_a02"  aria-labelledby="collapse1" class="collapse"  > <!-- data-parent="#heading_02" -->
-                hi i am B001
-            </div>
-
-            <div id="collapse2">
-                <button data-target="#unit_course_b02" aria-controls="unit_course_b02" class="btn btn-link" data-toggle="collapse"  >
-                    B002
-                </button>
-            </div>
-            <div id="unit_course_b02"  aria-labelledby="collapse2" class="collapse"  > <!-- data-parent="#heading_02" -->
-                hi i am B002
-            </div>
-
-            <div id="collapse3">
-                <button data-target="#unit_course_b03" aria-controls="unit_course_b03" class="btn btn-link" data-toggle="collapse" >
-                    B003
-                </button>
-            </div>
-            <!--                        <div id="unit_course_b03"  aria-labelledby="collapse3" class="collapse show"有無show，就會看能不能自動展開  data-parent="#heading_02">  把data-parent拿掉，打開B就不會自動把A關起來-->
-            <div id="unit_course_b03"  aria-labelledby="collapse3" class="collapse"  d>
-                hi i am B003
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--<script type="text/javascript" src="follow_mouse.js"></script>-->
-<!---->
-<!--<div id="cursor" style="position:absolute; z-index:999; visibility: visible;user-select: none">-->
-<!--    <img src="圖片2.png">-->
-<!--</div>-->
-<!--<script type="text/javascript" src="particle.js"></script>-->
-<!--<script type="text/javascript" src="love.js"></script>-->
-<?php
-/*
-function get_sub(){
-    if(isset($_POST["get_sub"])  ){
-
-        $get_id = $_POST["get_id"];
-
-        $url = 'http://120.110.113.123:3000/api/org.example.empty.student/'.$get_id;
-        $get_data = callAPI('GET', $url, false);
-        echo '<br>此ID的結果：'.$get_data;
+        echo '<td> <input type="text" name="score" size="8" ><br><br> </td>';
+        echo '</tr>';
     }
+//
+//
+    echo '</table>';
+    echo '<br><input type="submit" name="button" value="送出"><hr>';
 }
-*/
+//
 function callAPI($method, $url, $data){
     $curl = curl_init();
     switch ($method){
