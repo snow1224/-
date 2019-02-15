@@ -38,11 +38,14 @@
  <?php //這邊是選擇菜單  ?>
  
 <!--/////////////學生清單///////////////-->
+    <?php // w3-row-padding 微幅度調整padding，讓邊邊有大約5%的空間(目測) ?>
       <div class="w3-row-padding">
+          <?php //w3-third 將文字調正成整個寬度的1/3 ;  w3-section上下增加16px的空間 ; P.S. w3-third也可以不寫，不過寬度會有些微的不同?>
             <div class="w3-third w3-section" style="width:100%;">
+                <?php // nav-tabs使之生成tab區塊 P.S.這個是bootstrap3.3.7版本(QQ)?>
                   <ul class="nav nav-tabs" >
                        <li><a href="#1071" class="acative" data-toggle="tab" style="background-color:skyblue">1071</a></li>
-                       <li><a href="#1072" class="acative" data-toggle="tab" style="background-color:skyblue">1072</a></li>
+                       <li><a href="#1072" data-toggle="tab" style="background-color:skyblue">1072</a></li>
                         
                   </ul>
                   <div class="w3-container w3-light-gray" style="height: 80%; overflow:auto; overflow-x: hidden;">
@@ -55,6 +58,7 @@
                                   
                                   
                                   <div class="panel-group" >
+                                      <?php //M001為主課程div的id ?>
                                         <div id="M001" class="panel w3-green" >
                                             <div class="panel-heading">   
                                                 <button data-target="#all_unit_001" aria-controls="all_unit_001" class="w3-block text-mute" data-toggle="collapse"  aria-expanded="false">
@@ -63,7 +67,7 @@
                                             </div>
                                         </div>
                                         <div id="all_unit_001"  aria-labelledby="all_unit_001" class="collapse"  >
-                                <!--            a001  a001 a001 a001 a001-->
+                                        <!-- 主課程A ↓-->
                                             <div id="collapse1"> 
                                                     <div id="M001" class="panel panel-default" >
                                                         <table class="table">
@@ -91,7 +95,7 @@
                                                     </div>
                                                     
                                             </div>
-
+                                        <!-- 主課程A ↑-->
                                         </div>
                                     </div>
                                   
