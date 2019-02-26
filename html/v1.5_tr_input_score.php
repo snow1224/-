@@ -43,7 +43,7 @@ session_start();
         </ul>
     </div>
 </nav>
-<a href="http://127.0.0.1:81/mini/close_session.php"> 關閉seesion </a><br><br>
+<a href="./close_session.php"> 關閉seesion </a><br><br>
 
 <?php //這邊是選擇菜單  ?>
 <?php
@@ -90,6 +90,8 @@ function show_main_unit_course($N_main_id){
         echo '<div id="'.$main_N_unit_response[$N_unit]["unit_course_id"].'" style="background-color: #B9D6F2;">';
         //        每個unit table叫做  u002table  前面為unit id 加上table
         echo '<button data-target="#'.$main_N_unit_response[$N_unit]["unit_course_id"].'table"  style="color: black;" aria-controls="'.$main_N_unit_response[$N_unit]["unit_course_id"].'table" class="btn btn-link" data-toggle="collapse"  >';
+//        echo "<front color='red'>".$main_N_unit_response[$N_unit]["attend_status"]."</front>";
+//        echo $main_N_unit_response[$N_unit]["attend_status"];
         echo "<h3>".$main_N_unit_response[$N_unit]["name"]."</h3>";
         echo '</button>';
 
@@ -109,7 +111,7 @@ function show_main_unit_course($N_main_id){
 }
 //
 function show_unit_table ($get_unit_course_id){
-    echo '<form name="tr_send_point" method="post" action="http://127.0.0.1:81/mini/v1.2_tr_input_score_system.php">';
+    echo '<form name="tr_send_point" method="post" action="./v1.1_tr_input_score_system.php">';
     echo '<br><table  class="table table-striped">';
     echo '<thead><tr> <th>學號</th> <th>姓名</th> <th>出缺席</th>  <th>分數</th> </tr></thead>';
 
@@ -153,8 +155,16 @@ function show_unit_table ($get_unit_course_id){
 //        $SESSION[A001][pig001] = 這個select的id
         $_SESSION[$get_unit_course_id][$stu[1]]=$get_unit_course_id_response[$n]["select_record_id"];
 //        echo $_SESSION[$get_unit_course_id][$n]=$stu[1];
-        echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="attend" checked="True">出席';
-        echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="unattend">未出席';
+        if($get_unit_course_id_response[$n]["attend_status"] == "ATTEND"){
+            echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="attend" checked="True">出席';
+            echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="unattend">未出席';
+        }
+        else{
+            echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="attend" >出席';
+            echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="unattend" checked="True">未出席';
+
+        }
+
         echo '</td>';
 
         echo '<td> <input type="text" name="score'.$unit_and_stu_id.'" size="8" value="'.$get_unit_course_id_response[$n]["score"].'"><br><br> </td>';
