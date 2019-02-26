@@ -25,51 +25,51 @@ session_start();
 //    echo $n_stu;
     for($n = 0 ; $n < $n_stu ; $n++){
 //        attendA001pig001   attendA001pig002  attendA001pig003
-//        $_SESSION[$unit_id][$n]為這個為課程  第n個學生的id
-//        echo $_SESSION[$unit_id][0]."<br>";
+//        $_SESSION["course"][$unit_id][$n]為這個為課程  第n個學生的id
+//        echo $_SESSION["course"][$unit_id][0]."<br>";
 
-        $one_stu_status = strtolower($_POST["attend".$unit_id."".$_SESSION[$unit_id][$n]]);
-        $one_stu_score = strtolower($_POST["score".$unit_id."".$_SESSION[$unit_id][$n]]);
-//        $SESSION[A001][pig001] = select id
+        $one_stu_status = strtolower($_POST["attend".$unit_id."".$_SESSION["course"][$unit_id][$n]]);
+        $one_stu_score = strtolower($_POST["score".$unit_id."".$_SESSION["course"][$unit_id][$n]]);
+//        $SESSION["course"][A001][pig001] = select id
 //        echo $one_stu_status;
-//        echo $_SESSION[$unit_id][$_SESSION[$unit_id][$n]];
+//        echo $_SESSION["course"][$unit_id][$_SESSION["course"][$unit_id][$n]];
         switch ($one_stu_status){
             case "attend":
-                $put_sel_id = $_SESSION[$unit_id][$_SESSION[$unit_id][$n]];
+                $put_sel_id = $_SESSION["course"][$unit_id][$_SESSION["course"][$unit_id][$n]];
 //        $get_data = put_get_sub($put_sel_id);
 //        $response = json_decode($get_data, true);
 
                 $data_array =  array(
-                    "select_record_id"  =>  $_SESSION[$unit_id][$_SESSION[$unit_id][$n]],
+                    "select_record_id"  =>  $_SESSION["course"][$unit_id][$_SESSION["course"][$unit_id][$n]],
                     "semester_list"     =>  "resource:org.example.empty.semester_list#".$semester_list,
                     "attend_status"     =>  "ATTEND",
                     "pass_status"       =>  false,
                     "score"             =>  $one_stu_score,
-                    "student"           =>  "resource:org.example.empty.student#".$_SESSION[$unit_id][$n],
+                    "student"           =>  "resource:org.example.empty.student#".$_SESSION["course"][$unit_id][$n],
                     "unit_course"       =>  "resource:org.example.empty.unit_course#".$unit_id,
                     "main_course"       =>  "resource:org.example.empty.Main_course#".$main_id,
                 );
-                $put_url = 'http://120.110.112.152:3000/api/org.example.empty.select_record/'.$_SESSION[$unit_id][$_SESSION[$unit_id][$n]];
+                $put_url = 'http://120.110.112.152:3000/api/org.example.empty.select_record/'.$_SESSION["course"][$unit_id][$_SESSION["course"][$unit_id][$n]];
                 $update_plan = callAPI('PUT', $put_url, json_encode($data_array));
 //                header("Location:v1.5_tr_input_score.php");
                 break;
             case "unattend":
 //                echo "ywal";
-                $put_sel_id = $_SESSION[$unit_id][$_SESSION[$unit_id][$n]];
+                $put_sel_id = $_SESSION["course"][$unit_id][$_SESSION["course"][$unit_id][$n]];
 //        $get_data = put_get_sub($put_sel_id);
 //        $response = json_decode($get_data, true);
 
                 $data_array =  array(
-                    "select_record_id"  =>  $_SESSION[$unit_id][$_SESSION[$unit_id][$n]],
+                    "select_record_id"  =>  $_SESSION["course"][$unit_id][$_SESSION["course"][$unit_id][$n]],
                     "semester_list"     =>  "resource:org.example.empty.semester_list#".$semester_list,
                     "attend_status"     =>  "ABSENCE",
                     "pass_status"       =>  false,
                     "score"             =>  $one_stu_score,
-                    "student"           =>  "resource:org.example.empty.student#".$_SESSION[$unit_id][$n],
+                    "student"           =>  "resource:org.example.empty.student#".$_SESSION["course"][$unit_id][$n],
                     "unit_course"       =>  "resource:org.example.empty.unit_course#".$unit_id,
                     "main_course"       =>  "resource:org.example.empty.Main_course#".$main_id,
                 );
-                $put_url = 'http://120.110.112.152:3000/api/org.example.empty.select_record/'.$_SESSION[$unit_id][$_SESSION[$unit_id][$n]];
+                $put_url = 'http://120.110.112.152:3000/api/org.example.empty.select_record/'.$_SESSION["course"][$unit_id][$_SESSION["course"][$unit_id][$n]];
                 $update_plan = callAPI('PUT', $put_url, json_encode($data_array));
 //                header("Location:v1.5_tr_input_score.php");
                 break;
