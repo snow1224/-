@@ -151,10 +151,10 @@ function show_unit_table ($get_unit_course_id){
 //        $all_stu_id[$n] = $stu[1];
 //        $_SESSION[A001]儲存了這個為課程的全部學生id
 //        echo $get_unit_course_id;
-        $_SESSION[$get_unit_course_id][$n]=$stu[1];
-//        $SESSION[A001][pig001] = 這個select的id
-        $_SESSION[$get_unit_course_id][$stu[1]]=$get_unit_course_id_response[$n]["select_record_id"];
-//        echo $_SESSION[$get_unit_course_id][$n]=$stu[1];
+        $_SESSION["course"][$get_unit_course_id][$n]=$stu[1];
+//        $SESSION["course"][A001][pig001] = 這個select的id
+        $_SESSION["course"][$get_unit_course_id][$stu[1]]=$get_unit_course_id_response[$n]["select_record_id"];
+//        echo $_SESSION["course"][$get_unit_course_id][$n]=$stu[1];
         if($get_unit_course_id_response[$n]["attend_status"] == "ATTEND"){
             echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="attend" checked="True">出席';
             echo '<input type="radio" name="attend' .$unit_and_stu_id. '" value="unattend">未出席';
