@@ -28,9 +28,10 @@ session_start();
 //        $_SESSION[$unit_id][$n]為這個為課程  第n個學生的id
 //        echo $_SESSION[$unit_id][0]."<br>";
 
-        $one_stu_status = $_POST["attend".$unit_id."".$_SESSION[$unit_id][$n]];
-        $one_stu_score = $_POST["score".$unit_id."".$_SESSION[$unit_id][$n]];
+        $one_stu_status = strtolower($_POST["attend".$unit_id."".$_SESSION[$unit_id][$n]]);
+        $one_stu_score = strtolower($_POST["score".$unit_id."".$_SESSION[$unit_id][$n]]);
 //        $SESSION[A001][pig001] = select id
+//        echo $one_stu_status;
 //        echo $_SESSION[$unit_id][$_SESSION[$unit_id][$n]];
         switch ($one_stu_status){
             case "attend":
@@ -53,6 +54,7 @@ session_start();
 //                header("Location:v1.5_tr_input_score.php");
                 break;
             case "unattend":
+//                echo "ywal";
                 $put_sel_id = $_SESSION[$unit_id][$_SESSION[$unit_id][$n]];
 //        $get_data = put_get_sub($put_sel_id);
 //        $response = json_decode($get_data, true);
@@ -60,7 +62,7 @@ session_start();
                 $data_array =  array(
                     "select_record_id"  =>  $_SESSION[$unit_id][$_SESSION[$unit_id][$n]],
                     "semester_list"     =>  "resource:org.example.empty.semester_list#".$semester_list,
-                    "attend_status"     =>  "ATTEND",
+                    "attend_status"     =>  "ABSENCE",
                     "pass_status"       =>  false,
                     "score"             =>  $one_stu_score,
                     "student"           =>  "resource:org.example.empty.student#".$_SESSION[$unit_id][$n],
@@ -73,7 +75,7 @@ session_start();
                 break;
         }
     }
-
+    header("Location:./v1.5_tr_input_score.php");
 function callAPI($method, $url, $data){
     $curl = curl_init();
     switch ($method){
@@ -114,8 +116,8 @@ function callAPI($method, $url, $data){
 }
 ?>
 <br><br>
-<a href="http://127.0.0.1:81/mini/v1.5_tr_input_score.php"> 回到老師輸入成績頁面 </a><br><br>
-<a href="http://127.0.0.1:81/mini/close_session.php"> 關閉seesion </a><br><br>
+<a href="./v1.5_tr_input_score.php"> 回到老師輸入成績頁面 </a><br><br>
+<a href="./close_session.php"> 關閉seesion </a><br><br>
 </body>
 
 </html>
