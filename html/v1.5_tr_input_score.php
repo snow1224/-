@@ -25,31 +25,25 @@ session_start();
 <body>
 <?php //這邊是選擇菜單  ?>
 <nav class="navbar navbar-inverse">
-          <div class="container-fluid">
-            <div class="navbar-header">
-                  <a class="navbar-brand" href="#">微學分選課系統</a>
-            </div>
-            <ul class="nav navbar-nav navbar-right">
-                      
-                      <?php
-                        if(isset($_SESSION["login"]) && $_SESSION["login"]==1){
-                           echo '<li><a href="#"><span class="glyphicon glyphicon-star"></span> 我的最愛</a></li>';
-                           echo '<li><a href="./index.php"><span class="glyphicon glyphicon-shopping-cart"></span> 選課</a></li>';
-                           echo "<li><a href=\"./stu.php\"><span class=\"glyphicon glyphicon-user\"></span> 學生專區</a></li>";
-                        }
-                        else if(isset($_SESSION["login"]) && $_SESSION["login"]==2){
-                           echo "<li><a href=\"./v1.5_tr_input_score.php\"><span class=\"glyphicon glyphicon-user\"></span> 老師專區</a></li>";
-                        }else{
-                           echo '<li><a href="#"><span class="glyphicon glyphicon-star"></span> 我的最愛</a></li>';
-                           echo '<li><a href="./index.php"><span class="glyphicon glyphicon-shopping-cart"></span> 選課</a></li>';
-                           echo "<li><a href=\"./login_page.php\"><span class=\"glyphicon glyphicon-user\"></span> Login</a></li>";
-                        }
-                      ?>
-                      <li><a href="./logout.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-            </ul>
-          </div>
-      </nav>
-<a href="./close_session.php"> 關閉seesion </a><br><br>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">UnitCourseWeb</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="v1.5_tr_input_score.php"><span class="glyphicon glyphicon-star"></span> 評分</a></li>
+            <li><a href="v1.2_tr_open_course.php"><span class="glyphicon glyphicon-shopping-cart"></span> 開課</a></li>
+            <?php
+            if(isset($_SESSION["login"]) && $_SESSION["login"]==1){
+                echo "<li><a href=\"./stu.php\"><span class=\"glyphicon glyphicon-user\"></span> 學生專區</a></li>";
+            }else{
+                echo "<li><a href=\"./login_page.php\"><span class=\"glyphicon glyphicon-user\"></span> Login</a></li>";
+            }
+            ?>
+            <li><a href="./logout.php"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        </ul>
+    </div>
+</nav>
+<!--<a href="./close_session.php"> 關閉seesion </a><br><br>-->
 
 <?php //這邊是選擇菜單  ?>
 <?php
