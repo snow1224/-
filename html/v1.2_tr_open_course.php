@@ -135,7 +135,7 @@ function show_all_main_course (){
                             授課老師id：<input type="text" name="input_teacher" size="20"><br><br>
 
                             上課地點：<input type="text" name="input_classroom" size="20"><br><br>
-                            主課程為：<input type="text" name="input_Main_course" size="20"><br><br>
+                            主課程為：<input type="text" name="input_Main_course" size="20" value=" <?php echo $N_main_response[$N_main]["Main_course_id"]; ?>"><br><br>
 
 
                             學期：<input type="number"  min="0"  name="input_semester" size="20"><br><br>
