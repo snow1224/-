@@ -4,7 +4,27 @@ session_start();
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        .popover-title {
+            color: #000;
+            font-weight: bold;
+            background-color: greenyellow;
 
+        }
+        .popover-content {
+            overflow-y:auto;
+            color: #000;
+            word-break: break-all;
+            height: 300px;
+            background-color:lightyellow;
+
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="modal"]').popover();
+        });
+    </script>
 
     <link rel="stylesheet" href="./bootstrap-3.3.7/bootstrap-3.3.7/dist/css/bootstrap.min.css">
     <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"-->
@@ -49,10 +69,13 @@ session_start();
 <?php
 
 $year = "1072";
-echo '<hr>'.$year.'授課課程</h2>';
+echo '<h2>'.$year.'授課課程</h2>';
 show_all_main_course();
 
 function show_all_main_course (){
+//    echo '<script> var main_intro="新增主課程";</script>';
+    echo '<button type="button" name="tr_add_main_course"    class="btn btn-success btn-info btn-lg btn btn-primary popover-hide"  data-container="body"  data-toggle="modal" data-target="#main"   value=""  style="width:97%;background-color:#FFD382;padding:10px; margin:0 20px;" ><span class="glyphicon glyphicon-plus"></span></button>';
+    echo '<br><br>';
     echo '<div id="accordion" class="w3-row-padding">';
     //先去看有幾個main course
     $N_main_url ='http://120.110.112.152:3000/api/org.example.empty.Main_course';
@@ -77,11 +100,11 @@ function show_all_main_course (){
 
         echo '<button type="button" name="tr_add_unit_course" class="btn btn-success  " value="" data-toggle="modal"  data-target="#unit'.$N_main_response[$N_main]["Main_course_id"].'"><span class="glyphicon glyphicon-plus"></span></button>';
         //!!!!!!!!!!!!!!!!
-?>
+        ?>
 
-            <!-- Trigger the modal with a button -->
+        <!-- Trigger the modal with a button -->
 
-            <!-- Modal -->
+        <!-- Modal -->
 
         <div class="modal fade" id="main" role="dialog">
             <div class="modal-dialog">
@@ -94,13 +117,36 @@ function show_all_main_course (){
                             <h4 class="modal-title">建立主課程</h4>
                         </div>
                         <div class="modal-body ">
-                            學分：<input type="number" name="input_credit" size="20"><br><br>
-                            部門：<input type="text" name="input_department" size="20"><br><br>
-                            課程名稱：<input type="text" name="input_course_name" size="20"><br><br>
-                            須通過時數：<input type="number" name="input_pass_hours" size="20">(未滿一個小時，以一個小時計算)<br><br>
-                            是否開放給外系：<input type="radio" name="input_external_status" size="20" checked="true">是
-                            <input type="radio" name="input_external_status" size="20">否 <br><br>
+                            <table>
 
+                                <tr>
+                                    <td>課程名稱：</td>
+                                    <td><br><input type="text" name="input_course_name" size="20" required="required" placeholder="範例輸入:農藝入門班"><br><br></td>
+                                </tr>
+                                <tr>
+                                    <td>部門：</td>
+                                    <td><br><input type="text" name="input_department" size="20" required="required" placeholder="範例輸入:農委會"><br><br></td>
+                                </tr>
+                                <tr>
+                                    <td>學分：</td>
+                                    <td><br><input type="number" name="input_credit" size="20" min="1" max="5" x required="required" placeholder="範例輸入:1" style="width:10vw;" ><br><br></td>
+                                </tr>
+                                <tr>
+                                    <td>須通過時數：</td>
+                                    <td><br><input type="number" name="input_pass_hours" size="20" required="required" min="1" max="5" placeholder="範例輸入:1" style="width:10vw;" >(未滿1小時，以1小時計算)<br><br></td>
+                                </tr>
+                                <tr>
+                                    <td>是否開放給外系：</td>
+                                    <td><br><input type="radio" name="input_external_status" size="20" checked="true">是
+                                        <input type="radio" name="input_external_status" size="20">否 <br><br>
+                                    </td>
+                                </tr>
+
+
+
+
+
+                            </table>
                         </div>
                         <div class="modal-footer">
                             <input type="submit" name="post_tr_main_course_sub" size="5" value="確定">
@@ -113,35 +159,166 @@ function show_all_main_course (){
         </div>
 
         <div class="modal fade" id="unit<?php echo $N_main_response[$N_main]["Main_course_id"]; ?>" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog"  >
 
                 <!-- Modal content-->
-                <div class="modal-content">
+                <div class="modal-content" style="overflow:auto;overflow-y:scroll;overflow-x:scroll;overflow: scroll;height: 600px">
                     <form name="open_unit_course" method="post" action="v1.2_tr_open_course.php"><br>
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">建立微課程</h4>
                         </div>
-                        <div class="modal-body ">
-                            微課程名字：<input type="text" name="input_name" size="20"><br><br>
-                            課程介紹：<textarea type="text" name="input_introduction" size="20" ></textarea><br><br>
-                            上課開始日期：<input type="date" name="input_start_date" size="20"><br><br>
-                            上課結束日期：<input type="date" name="input_end_date" size="20"><br><br>
-                            上課開始時間：<input type="time" name="input_start_time" size="20"><br><br>
-                            上課結束時間：<input type="time" name="input_end_time" size="20"><br><br>
+                        <div class="modal-body " >
+                            <table >
+<!--                                1-->
+                                <tr>
+                                    <td>
+                                        主課程：
+                                    </td>
+                                    <td>
+                                        <?php echo $N_main_response[$N_main]["Main_course_id"]; ?><br>
+                                        <input type="hidden" name="input_hidden_Main_course"  value=" <?php echo $N_main_response[$N_main]["Main_course_id"]; ?>">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        微課程名字：
+                                    </td>
+                                    <td>
+                                        <br><input type="text" name="input_name" size="20" placeholder="範例輸入:農藝產銷概述" required="required"><br><br>
+                                    </td>
+                                </tr>
+<!--                                2-->
+                                <tr>
+                                    <td>
+                                        課程介紹：
+                                    </td>
+                                    <td>
+                                        <?Php $intro = "課程以青壯年為主";?>
+                                        <br><textarea type="text" name="input_introduction" style="width:30vw;height:20vw;" placeholder="範例輸入:<?php echo $intro?>" required="required" size="20" ></textarea><br><br>
 
-                            星期：<input type="text" name="input_weeks" size="20"><br><br>
-                            部門：<input type="text" name="input_department" size="20"><br><br>
-                            授課老師id：<input type="text" name="input_teacher" size="20"><br><br>
+                                    </td>
+                                </tr>
 
-                            上課地點：<input type="text" name="input_classroom" size="20"><br><br>
-                            主課程為：<input type="text" name="input_Main_course" size="20" value=" <?php echo $N_main_response[$N_main]["Main_course_id"]; ?>"><br><br>
+<!--                                3-->
+                                <tr>
+                                    <td>
+                                        上課開始日期：
+                                    </td>
+                                    <td>
+                                        <br><input type="date" name="input_start_date" required="required"   style="width:10vw;">範例輸入:2019/03/12<br><br>
+                                    </td>
+                                </tr>
+<!--                                4-->
+                                <tr>
+                                    <td>
+                                        上課結束日期：
+                                    </td>
+                                    <td>
+                                        <br><input type="date" name="input_end_date" required="required"  style="width:10vw;">範例輸入:2019/03/12<br><br>
+                                    </td>
+                                </tr>
+<!--                                5-->
+                                <tr>
+                                    <td>
+                                        上課開始時間：
+                                    </td>
+                                    <td>
+                                        <br><input type="time" name="input_start_time" required="required"  pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$"  style="width:10vw;">範例輸入:13:00<br><br>
+                                    </td>
+                                </tr>
+<!--                                6-->
+                                <tr>
+                                    <td>
+                                        上課結束時間：
+                                    </td>
+                                    <td>
+                                        <br><input type="time" name="input_end_time"  required="required"  style="width:10vw;">範例輸入:14:00<br><br>
+                                    </td>
+                                </tr>
 
 
-                            學期：<input type="number"  min="0"  name="input_semester" size="20"><br><br>
-                            上課時數：<input type="number" min="0" max="30000" name="input_hours" size="20">(未滿一個小時，以一個小時計算)<br><br>
-                            最大學生數：<input type="number" min="0" max="30000" name="input_max_stu" size="20"><br><br>
-                            通過分數：<input type="number" min="0" max="100" name="input_pass_score" size="20"><br><br>
+<!--                                7-->
+                                <tr>
+                                    <td>
+                                        星期：
+                                    </td>
+                                    <td>
+                                        <br><input type="text" name="input_weeks" placeholder="範例輸入:一" required="required" size="20"><br><br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        上課地點：
+                                    </td>
+                                    <td>
+                                        <br><input type="text" name="input_classroom" size="20" placeholder="範例輸入:place001" required="required"><br><br>
+                                    </td>
+                                </tr>
+<!--                                8-->
+                                <tr>
+                                    <td>
+                                        授課老師id：
+                                    </td>
+                                    <td>
+                                        <br><input type="text" name="input_teacher" size="20" placeholder="範例輸入:tr001" required="required"><br><br>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        部門：
+                                    </td>
+                                    <td>
+                                        <br><input type="text" name="input_department" size="20" placeholder="範例輸入:農委會" required="required"><br><br>
+                                    </td>
+                                </tr>
+<!--                                9-->
+
+<!--                                10-->
+
+
+<!--                                11-->
+
+<!--                                12-->
+                                <tr>
+                                    <td>
+                                        學期：
+                                    </td>
+                                    <td>
+                                        <br><input type="number"  min="0"  name="input_semester" placeholder="範例輸入:1072" required="required"  style="width:10vw;"><br><br>
+                                    </td>
+                                </tr>
+
+                                <!--                                13-->
+                                <tr>
+                                    <td>
+                                        上課時數：
+                                    </td>
+                                    <td>
+                                        <br><input type="number" min="1" max="3000" name="input_hours" placeholder="範例輸入:1" required="required"  style="width:10vw;">(未滿一個小時，以一個小時計算)<br><br>
+                                    </td>
+                                </tr>
+<!--                                14-->
+                                <tr>
+                                    <td>
+                                        最大學生數：
+                                    </td>
+                                    <td>
+                                        <br><input type="number" min="1" max="30000" name="input_max_stu" placeholder="範例輸入:30" required="required"  style="width:10vw;"><br><br>
+                                    </td>
+                                </tr>
+<!--                                15-->
+                                <tr>
+                                    <td>
+                                        通過分數：
+                                    </td>
+                                    <td>
+                                        <br><input type="number" min="0" max="100" name="input_pass_score" placeholder="範例輸入:70" required="required"  style="width:10vw;"><br><br>
+                                    </td>
+                                </tr>
+                            </table>
+
 
                             <!--                                <input type="radio" name="input_external_status" size="20"> <br><br>-->
 
@@ -166,7 +343,7 @@ function show_all_main_course (){
     echo '</div><br>';
     echo '<div>';
 //    onclick="location.href='http://localhost:81/mini/v1.1_tr_open_ex_main_course.php'"
-        echo '<button type="button" name="tr_add_main_course" class="btn btn-success btn-info btn-lg" data-toggle="modal" data-target="#main"  value=""  style="width:97%;background-color:#FFD382;padding:10px; margin:0 20px;" ><span class="glyphicon glyphicon-plus"></span></button>';
+//    echo '<button type="button" name="tr_add_main_course" class="btn btn-success btn-info btn-lg" data-toggle="modal" data-target="#main"  value=""  style="width:97%;background-color:#FFD382;padding:10px; margin:0 20px;" ><span class="glyphicon glyphicon-plus"></span></button>';
     echo '</div>';
 }
 function show_main_unit_course($N_main_id){
