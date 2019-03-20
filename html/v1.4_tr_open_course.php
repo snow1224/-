@@ -12,19 +12,15 @@ session_start();
 
         }
         .popover-content {
-            overflow-y:auto;
+            /*overflow-y:auto;*/
             color: #000;
             word-break: break-all;
-            height: 300px;
+            height: 40px;
             background-color:lightyellow;
 
         }
     </style>
-    <script>
-        $(document).ready(function(){
-            $('[data-toggle="modal"]').popover();
-        });
-    </script>
+
 
     <link rel="stylesheet" href="./bootstrap-3.3.7/bootstrap-3.3.7/dist/css/bootstrap.min.css">
     <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"-->
@@ -67,14 +63,14 @@ session_start();
 
 <?php //這邊是選擇菜單  ?>
 <?php
-
+$file_name = "v1.3_tr_open_course.php";
 $year = "1072";
 echo '<h2>'.$year.'授課課程</h2>';
-show_all_main_course();
+show_all_main_course($file_name);
 
-function show_all_main_course (){
+function show_all_main_course ($file_name){
 //    echo '<script> var main_intro="新增主課程";</script>';
-    echo '<button type="button" name="tr_add_main_course"    class="btn btn-success btn-info btn-lg btn btn-primary popover-hide"  data-container="body"  data-toggle="modal" data-target="#main"   value=""  style="width:97%;background-color:#FFD382;padding:10px; margin:0 20px;" ><span class="glyphicon glyphicon-plus"></span></button>';
+    echo '<div   title="新增主課程" data-content="新增主課程" data-toggle="popover" data-placement="bottom"><button type="button" name="tr_add_main_course"    class="btn btn-success btn-info btn-lg btn btn-primary popover-hide"  data-container="body"  data-toggle="modal" data-target="#main"   value=""  style="width:97%;background-color:#FFD382;padding:10px; margin:0 20px;" ><span class="glyphicon glyphicon-plus"></span></button></div>';
     echo '<br><br>';
     echo '<div id="accordion" class="w3-row-padding">';
     //先去看有幾個main course
@@ -100,6 +96,7 @@ function show_all_main_course (){
 
         echo '<button type="button" name="tr_add_unit_course" class="btn btn-success  " value="" data-toggle="modal"  data-target="#unit'.$N_main_response[$N_main]["Main_course_id"].'"><span class="glyphicon glyphicon-plus"></span></button>';
         //!!!!!!!!!!!!!!!!
+
         ?>
 
         <!-- Trigger the modal with a button -->
@@ -111,7 +108,7 @@ function show_all_main_course (){
 
                 <!-- Modal content-->
                 <div class="modal-content">
-                    <form name="open_main_course" method="post" action="v1.2_tr_open_course.php"><br>
+                    <form name="open_main_course" method="post" action="<?php echo $file_name; ?>"><br>
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">建立主課程</h4>
@@ -163,7 +160,7 @@ function show_all_main_course (){
 
                 <!-- Modal content-->
                 <div class="modal-content" style="overflow:auto;overflow-y:scroll;overflow-x:scroll;overflow: scroll;height: 600px">
-                    <form name="open_unit_course" method="post" action="v1.2_tr_open_course.php"><br>
+                    <form name="open_unit_course" method="post" action="<?php echo $file_name; ?>"><br>
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">建立微課程</h4>
@@ -239,14 +236,14 @@ function show_all_main_course (){
 
 
 <!--                                7-->
-                                <tr>
-                                    <td>
-                                        星期：
-                                    </td>
-                                    <td>
-                                        <br><input type="text" name="input_weeks" placeholder="範例輸入:一" required="required" size="20"><br><br>
-                                    </td>
-                                </tr>
+<!--                                <tr>-->
+<!--                                    <td>-->
+<!--                                        星期：-->
+<!--                                    </td>-->
+<!--                                    <td>-->
+<!--                                        <br><input type="text" name="input_weeks" placeholder="範例輸入:一" required="required" size="20"><br><br>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
                                 <tr>
                                     <td>
                                         上課地點：
@@ -466,19 +463,34 @@ if(isset($_POST["post_tr_unit_course_sub"])){
 //            if($hours_dif % 1 != 0)
 //                $hours_dif++;
 //            echo $hours_dif;
-    $post_input_weeks = $_POST["input_weeks"];
+//    $post_input_weeks = $_POST["input_weeks"];
     $post_input_department = "resource:org.example.empty.department#".$_POST["input_department"];
     $post_input_teacher = "resource:org.example.empty.teacher#".$_POST["input_teacher"];
 
     $post_input_classroom = "resource:org.example.empty.classroom#".$_POST["input_classroom"];
-    $post_input_Main_course = "resource:org.example.empty.Main_course#".$_POST["input_Main_course"];
+    $post_input_Main_course = "resource:org.example.empty.Main_course#".$_POST["input_hidden_Main_course"];
 
     $post_input_semester = "resource:org.example.empty.semester_list#".$_POST["input_semester"];
     $post_input_hours = $_POST["input_hours"];
     $post_input_max_stu = $_POST["input_max_stu"];
     $post_input_pass_score = $_POST["input_pass_score"];
+//    $week = array("日","一","二","三","四","五","六");
+    $week_day = get_chinese_weekday($post_input_start_date);
 
+    $start = strtotime($post_input_start_time);
+    $end = strtotime($post_input_end_time);
+    $timeDiff = $end - $start;
+    echo timetostr($timeDiff) % 60;
+    if($timeDiff % 60 == 0){
+        echo "?";
+        $time_hour = $timeDiff/60;
+    }
+    else{
+        $time_hour = ($timeDiff/60)+1;
+        echo "!!";
+    }
 
+    echo $time_hour."<hr>";
 
     $data_array =  array(
         "unit_course_id"   =>    $post_id,
@@ -486,7 +498,7 @@ if(isset($_POST["post_tr_unit_course_sub"])){
         "start_time"       =>    $start_course,
         "end_time"         =>    $end_course,
         "hours"            =>    $post_input_hours,
-        "weeks"            =>    $post_input_weeks,
+        "weeks"            =>    $week_day,
         "department"       =>    $post_input_department,
         "teacher"          =>    $post_input_teacher,
         "max_stu"          =>    $post_input_max_stu,
@@ -503,8 +515,19 @@ if(isset($_POST["post_tr_unit_course_sub"])){
     $response = json_decode($make_call, true);
     echo "<script> alert('恭喜新增微成功');</script>";
 }
-
+    function get_chinese_weekday($datetime)
+    {
+        $weekday  = date('w', strtotime($datetime));
+        $weeklist = array('日', '一', '二', '三', '四', '五', '六');
+        return $weeklist[$weekday];
+    }
 
 ?>
+<script>
+    $(document).ready(function(){
+        //trigger:'hover' 滑過就會出現
+        $('[data-toggle="popover"]').popover({trigger:'hover'});
+    });
+</script>
 </body>
 </html>
