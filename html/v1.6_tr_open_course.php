@@ -22,13 +22,13 @@ session_start();
     </style>
 
 
-    <link rel="stylesheet" href="./bootstrap-3.3.7/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/bootstrap-3.3.7/dist/css/bootstrap.min.css">
     <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"-->
     <link rel="stylesheet" href="w3.css">
     <link rel="stylesheet" href="w3-theme.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script-->
-    <script src="./bootstrap-3.3.7/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+    <script src="./css/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
 
 
     <meta charset="UTF-8">
@@ -38,20 +38,20 @@ session_start();
 </head>
 
 <!--CSS寫在head中   JS寫在body中-->
-<body>
+<body style="background-image:url(./img/background.jpg)">
 <?php //這邊是選擇菜單  ?>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">UnitCourseWeb</a>
+            <a class="navbar-brand" href="#">微學分選課系統</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="v1.5_tr_input_score.php"><span class="glyphicon glyphicon-star"></span> 評分</a></li>
-            <li><a href="v1.2_tr_open_course.php"><span class="glyphicon glyphicon-shopping-cart"></span> 開課</a></li>
+            <li><a href="v1.6_tr_open_course.php"><span class="glyphicon glyphicon-shopping-cart"></span> 開課</a></li>
             <?php
             if(isset($_SESSION["login"]) && $_SESSION["login"]==1){
                 echo "<li><a href=\"./stu.php\"><span class=\"glyphicon glyphicon-user\"></span> 學生專區</a></li>";
-            }else{
+            }else if(isset($_SESSION["login"]) && $_SESSION["login"]!=2){
                 echo "<li><a href=\"./login_page.php\"><span class=\"glyphicon glyphicon-user\"></span> Login</a></li>";
             }
             ?>
@@ -63,14 +63,19 @@ session_start();
 
 <?php //這邊是選擇菜單  ?>
 <?php
-$file_name = "v1.3_tr_open_course.php";
+$file_name = "v1.6_tr_open_course.php";
 $year = "1072";
 echo '<h2>'.$year.'授課課程</h2>';
+echo '<div class="w3-container" style="height: 80%; overflow:auto; overflow-x: hidden;">';
+echo '<div class="w3-row-padding">';
 show_all_main_course($file_name);
-
+echo '<a href=https://zh.pngtree.com>來自pngtree.com的圖形</a>';
+echo '</div>';
+echo '</div>';
 function show_all_main_course ($file_name){
 //    echo '<script> var main_intro="新增主課程";</script>';
-    echo '<div   title="新增主課程" data-content="新增主課程" data-toggle="popover" data-placement="bottom"><button type="button" name="tr_add_main_course"    class="btn btn-success btn-info btn-lg btn btn-primary popover-hide"  data-container="body"  data-toggle="modal" data-target="#main"   value=""  style="width:97%;background-color:#FFD382;padding:10px; margin:0 20px;" ><span class="glyphicon glyphicon-plus"></span></button></div>';
+    echo '<br>';
+    echo '<div   title="新增主課程" data-content="新增主課程" data-toggle="popover" data-placement="bottom"><button type="button" name="tr_add_main_course"    class="btn btn-success btn-info btn-lg btn btn-primary popover-hide"  data-container="body"  data-toggle="modal" data-target="#main"   value=""  style="width:97%;background-color:#A0D382;padding:10px; margin:0 20px;" ><span class="glyphicon glyphicon-plus"></span></button></div>';
     echo '<br><br>';
     echo '<div id="accordion" class="w3-row-padding">';
     //先去看有幾個main course
@@ -80,21 +85,24 @@ function show_all_main_course ($file_name){
     //                        把json解碼放response
     $N_main_response = json_decode($N_main_get_data, true);
 //    echo $N_main_response[0]["Main_course_id"];
+    
     for($N_main = 0 ; $N_main < count($N_main_response); $N_main++){
-//        要置製造主課程的選單
-        echo '<div class="card" >';
-        echo '<div id="'.$N_main_response[$N_main]["Main_course_id"].'" style="background-color:#0353A4"; class="card-header" >';
+//        要置製造主課程的選單   background-color:#0353A4;
+        echo '<div class="w3-third w3-section">';
+        echo '<div class="card" style="border-radius:10px;">';
+        $N_main_response[$N_main]["Main_course_id"] = trim($N_main_response[$N_main]["Main_course_id"]);
+        echo '<div id="'.$N_main_response[$N_main]["Main_course_id"].'" style="background-image:url(./img/open_main_course3.png);background-size:cover;border-radius:10px;border-bottom-style:solid;border-right-style:solid;border-color:black;" class="card-header" >';
         // 做 以主課程為名的按鈕
-        echo '<button data-target="#'.$N_main_response[$N_main]["Main_course_id"].'lists" style="color: white;" aria-controls="'.$N_main_response[$N_main]["Main_course_id"].'lists" class="btn btn-link" data-toggle="collapse"  aria-expanded="false">';
+        echo '<center><button data-target="#'.$N_main_response[$N_main]["Main_course_id"].'lists" style="color: white;" aria-controls="'.$N_main_response[$N_main]["Main_course_id"].'lists" class="btn btn-link" data-toggle="collapse"  aria-expanded="false">';
 
 
 
-        echo "<h3>".$N_main_response[$N_main]["name"]."</h3>";
+        echo "<h5>".$N_main_response[$N_main]["name"]."</h5>";
         //       主課程的+
 //        echo '<div class="container">';
 //        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#unit">Open Modal</button>
 
-        echo '<button type="button" name="tr_add_unit_course" class="btn btn-success  " value="" data-toggle="modal"  data-target="#unit'.$N_main_response[$N_main]["Main_course_id"].'"><span class="glyphicon glyphicon-plus"></span></button>';
+        echo '<button type="button" name="tr_add_unit_course" class="btn btn-success  " value="" data-toggle="modal"  data-target="#unit'.$N_main_response[$N_main]["Main_course_id"].'" style="float:right;margin-top:1em;margin-right:4em;"><span class="glyphicon glyphicon-plus" ></span></button>';
         //!!!!!!!!!!!!!!!!
 
         ?>
@@ -118,11 +126,11 @@ function show_all_main_course ($file_name){
 
                                 <tr>
                                     <td>課程名稱：</td>
-                                    <td><br><input type="text" name="input_course_name" size="20" required="required" placeholder="範例輸入:農藝入門班"><br><br></td>
+                                    <td><br><input type="text" name="input_course_name" size="20" required="required" placeholder="範例輸入:資訊基礎程式入門"><br><br></td>
                                 </tr>
                                 <tr>
                                     <td>部門：</td>
-                                    <td><br><input type="text" name="input_department" size="20" required="required" placeholder="範例輸入:農委會"><br><br></td>
+                                    <td><br><input type="text" name="input_department" size="20" required="required" placeholder="範例輸入:資訊學院"><br><br></td>
                                 </tr>
                                 <tr>
                                     <td>學分：</td>
@@ -130,7 +138,7 @@ function show_all_main_course ($file_name){
                                 </tr>
                                 <tr>
                                     <td>須通過時數：</td>
-                                    <td><br><input type="number" name="input_pass_hours" size="20" required="required" min="1" max="5" placeholder="範例輸入:1" style="width:10vw;" >(未滿1小時，以1小時計算)<br><br></td>
+                                    <td><br><input type="number" name="input_pass_hours" size="20" required="required" min="1" max="50" placeholder="範例輸入:1" style="width:10vw;" >(未滿1小時，以1小時計算)<br><br></td>
                                 </tr>
                                 <tr>
                                     <td>是否開放給外系：</td>
@@ -174,7 +182,7 @@ function show_all_main_course ($file_name){
                                     </td>
                                     <td>
                                         <?php echo $N_main_response[$N_main]["Main_course_id"]; ?><br>
-                                        <input type="hidden" name="input_hidden_Main_course"  value=" <?php echo $N_main_response[$N_main]["Main_course_id"]; ?>">
+                                        <input type="hidden" name="input_hidden_Main_course"  value="<?php echo $N_main_response[$N_main]["Main_course_id"]; ?>">
                                     </td>
                                 </tr>
                                 <tr>
@@ -182,7 +190,7 @@ function show_all_main_course ($file_name){
                                         微課程名字：
                                     </td>
                                     <td>
-                                        <br><input type="text" name="input_name" size="20" placeholder="範例輸入:農藝產銷概述" required="required"><br><br>
+                                        <br><input type="text" name="input_name" size="20" placeholder="範例輸入:資訊程式基礎入門" required="required"><br><br>
                                     </td>
                                 </tr>
 <!--                                2-->
@@ -191,8 +199,8 @@ function show_all_main_course ($file_name){
                                         課程介紹：
                                     </td>
                                     <td>
-                                        <?Php $intro = "課程以青壯年為主";?>
-                                        <br><textarea type="text" name="input_introduction" style="width:30vw;height:20vw;" placeholder="範例輸入:<?php echo $intro?>" required="required" size="20" ></textarea><br><br>
+                                        <?Php $intro = "提供給資訊入門的新鮮人";?>
+                                        <br><textarea type="text" name="input_introduction" style="width:19vw;height:20vw;" placeholder="範例輸入:<?php echo $intro?>" required="required" size="15" ></textarea><br><br>
 
                                     </td>
                                 </tr>
@@ -221,7 +229,7 @@ function show_all_main_course ($file_name){
                                         上課開始時間：
                                     </td>
                                     <td>
-                                        <br><input type="time" name="input_start_time" required="required"  pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$"  style="width:10vw;">範例輸入:13:00<br><br>
+                                        <br><input type="time" name="input_start_time" required="required"  pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$"  style="width:10vw;">範例輸入:下午 02:00<br><br>
                                     </td>
                                 </tr>
 <!--                                6-->
@@ -230,7 +238,7 @@ function show_all_main_course ($file_name){
                                         上課結束時間：
                                     </td>
                                     <td>
-                                        <br><input type="time" name="input_end_time"  required="required"  style="width:10vw;">範例輸入:14:00<br><br>
+                                        <br><input type="time" name="input_end_time"  required="required"  style="width:10vw;">範例輸入:下午 04:00<br><br>
                                     </td>
                                 </tr>
 
@@ -267,7 +275,7 @@ function show_all_main_course ($file_name){
                                         部門：
                                     </td>
                                     <td>
-                                        <br><input type="text" name="input_department" size="20" placeholder="範例輸入:農委會" required="required"><br><br>
+                                        <br><input type="text" name="input_department" size="20" placeholder="範例輸入:資訊學院" required="required"><br><br>
                                     </td>
                                 </tr>
 <!--                                9-->
@@ -331,7 +339,8 @@ function show_all_main_course ($file_name){
         </div>
 
         <?php
-        echo '</button>';
+        echo '</div>';
+        echo '</button></center>';
         echo '</div>';
 // 傳主課程id過去，要做主課程中的微課程了
         show_main_unit_course($N_main_response[$N_main]["Main_course_id"]);
@@ -352,19 +361,20 @@ function show_main_unit_course($N_main_id){
     $main_N_unit_get_data = callAPI('GET', $main_N_unit_url, false);
     //                        把json解碼放response
     $main_N_unit_response = json_decode($main_N_unit_get_data, true);
-
+//background-color: #B9D6F2;
     for($N_unit = 0 ; $N_unit < count($main_N_unit_response); $N_unit++){
-        echo '<div id="'.$main_N_unit_response[$N_unit]["unit_course_id"].'" style="background-color: #B9D6F2;">';
+        echo '<div id="'.$main_N_unit_response[$N_unit]["unit_course_id"].'" style="background-image:url(./img/open_main_course2.png);background-size:cover;" >';
         //        每個unit table叫做  u002table  前面為unit id 加上table
 //        <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#unit">Open Modal</button>
-        echo '<button data-target="#'.$main_N_unit_response[$N_unit]["unit_course_id"].'table"  style="color: black;" aria-controls="'.$main_N_unit_response[$N_unit]["unit_course_id"].'table" class="btn btn-link" data-toggle="collapse"  >';
+        echo '<div data-target="#'.$main_N_unit_response[$N_unit]["unit_course_id"].'table"  style="color: black;" aria-controls="'.$main_N_unit_response[$N_unit]["unit_course_id"].'table" class="btn" data-toggle="collapse"  >';
 //        echo "<front color='red'>".$main_N_unit_response[$N_unit]["attend_status"]."</front>";
 //        echo $main_N_unit_response[$N_unit]["attend_status"];
-        echo "<h3>".$main_N_unit_response[$N_unit]["name"]."</h3>";
+//        echo "<h3>".$main_N_unit_response[$N_unit]["name"]."</h3>";
+        echo '<h6 style="color:white;">'.$main_N_unit_response[$N_unit]["name"].'</h6>';
 //     微課程的+
 //        echo '<button type="submit" name="tr_add_main_course" class="btn btn-success" value=""><span class="glyphicon glyphicon-plus"></span></button>';
 
-        echo '</button>';
+        echo '</div>';
 
         echo '</div>';
 
@@ -468,7 +478,7 @@ if(isset($_POST["post_tr_unit_course_sub"])){
     $post_input_teacher = "resource:org.example.empty.teacher#".$_POST["input_teacher"];
 
     $post_input_classroom = "resource:org.example.empty.classroom#".$_POST["input_classroom"];
-    $post_input_Main_course = "resource:org.example.empty.Main_course#".$_POST["input_hidden_Main_course"];
+    $post_input_Main_course = "resource:org.example.empty.Main_course#".trim($_POST["input_hidden_Main_course"]);
 
     $post_input_semester = "resource:org.example.empty.semester_list#".$_POST["input_semester"];
     $post_input_hours = $_POST["input_hours"];
@@ -477,20 +487,20 @@ if(isset($_POST["post_tr_unit_course_sub"])){
 //    $week = array("日","一","二","三","四","五","六");
     $week_day = get_chinese_weekday($post_input_start_date);
 
-    $start = strtotime($post_input_start_time);
-    $end = strtotime($post_input_end_time);
-    $timeDiff = $end - $start;
-    echo timetostr($timeDiff) % 60;
-    if($timeDiff % 60 == 0){
-        echo "?";
-        $time_hour = $timeDiff/60;
-    }
-    else{
-        $time_hour = ($timeDiff/60)+1;
-        echo "!!";
-    }
-
-    echo $time_hour."<hr>";
+//    $start = strtotime($post_input_start_time);
+//    $end = strtotime($post_input_end_time);
+//    $timeDiff = $end - $start;
+//    echo timetostr($timeDiff) % 60;
+//    if($timeDiff % 60 == 0){
+//        echo "?";
+//        $time_hour = $timeDiff/60;
+//    }
+//    else{
+//        $time_hour = ($timeDiff/60)+1;
+//        echo "!!";
+//    }
+//
+//    echo $time_hour."<hr>";
 
     $data_array =  array(
         "unit_course_id"   =>    $post_id,
